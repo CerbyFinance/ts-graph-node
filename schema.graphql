@@ -1,29 +1,297 @@
+# For each event without being tied to a pool
+type Global @entity {
+  id: ID!
+
+  "Total of pools"
+  totalPools: BigInt!
+
+  "Total of transactions"
+  totalTransactions: BigInt!
+
+  # total volume
+  totalVolumeUSD: BigInt!
+  # totalVolumeUSD += for buy Swap.amountCerUsdIn or for sell Swap.amountCerUsdOut
+
+  # total liquidity
+  totalLiquidityUSD: BigInt!
+  # totalLiquidityUSD += Swap.amountCerUsdIn - Swap.amountCerUsdOut
+  # totalLiquidityUSD += LiquidityAdded.amountCerUsdToMint
+  # totalLiquidityUSD -= LiquidityRemoved.amountCerUsdToBurn
+
+  Fees: BigDecimal!
+  # Fees += swapEvent.currentFee / FEE_DENORM
+
+  latestHourlies: GlobalHourly!
+  latestDailies: GlobalDaily!
+  latestMonthlies: GlobalMonthly!
+}
+
+type GlobalHourly @entity { # Just a snapshot from global by timestamp
+  id: ID! # timestamp rounded to current day by dividing by 3600
+
+  startUnix: Int! # unix timestamp for start of day
+
+  "Total of pools"
+  totalPools: BigInt!
+
+  "Total of transactions"
+  totalTransactions: BigInt!
+
+  # total volume
+  totalVolumeUSD: BigInt!
+  # totalVolumeUSD += for buy Swap.amountCerUsdIn or for sell Swap.amountCerUsdOut
+
+  # total liquidity
+  totalLiquidityUSD: BigInt!
+  # totalLiquidityUSD += Swap.amountCerUsdIn - Swap.amountCerUsdOut
+  # totalLiquidityUSD += LiquidityAdded.amountCerUsdToMint
+  # totalLiquidityUSD -= LiquidityRemoved.amountCerUsdToBurn
+
+  Fees: BigDecimal!
+  # Fees += swapEvent.currentFee / FEE_DENORM
+
+  previous: GlobalHourly!
+}
+
+type GlobalDaily @entity { # Just a snapshot from global by timestamp
+  id: ID! # timestamp rounded to current day by dividing by 86400
+
+  startUnix: Int! # unix timestamp for start of day
+
+  "Total of pools"
+  totalPools: BigInt!
+
+  "Total of transactions"
+  totalTransactions: BigInt!
+
+  # total volume
+  totalVolumeUSD: BigInt!
+  # totalVolumeUSD += for buy Swap.amountCerUsdIn or for sell Swap.amountCerUsdOut
+
+  # total liquidity
+  totalLiquidityUSD: BigInt!
+  # totalLiquidityUSD += Swap.amountCerUsdIn - Swap.amountCerUsdOut
+  # totalLiquidityUSD += LiquidityAdded.amountCerUsdToMint
+  # totalLiquidityUSD -= LiquidityRemoved.amountCerUsdToBurn
+
+  Fees: BigDecimal!
+  # Fees += swapEvent.currentFee / FEE_DENORM
+
+  previous: GlobalDaily!
+}
+
+type GlobalMonthly @entity { # Just a snapshot from global by timestamp
+  id: ID! # timestamp rounded to current day by dividing by 2592000
+
+  startUnix: Int! # unix timestamp for start of day
+
+  "Total of pools"
+  totalPools: BigInt!
+
+  "Total of transactions"
+  totalTransactions: BigInt!
+
+  # total volume
+  totalVolumeUSD: BigInt!
+
+  # total liquidity
+  totalLiquidityUSD: BigInt!
+
+  Fees: BigDecimal!
+
+  previous: GlobalMonthly!
+}
+
+
+
+
+# Events
+
 type Swap @entity {
   # transaction hash + "-" + index in swaps Transaction array
   id: ID!
 
   feedType: String!
-  txHash: Bytes!
-  timestamp: BigInt!
+  # if amountCerUsdIn != 0: Buy
+  # else Sell
+
+  token: Bytes!
+
   sender: Bytes!
-  from: Bytes!
   to: Bytes!
 
-  cerbyInFtm: BigDecimal!
-  cerbyInUsd: BigDecimal!
+  price: BigDecimal!
 
-  amountCerby: BigDecimal!
-  amountCerbyInFtm: BigDecimal!
-  amountCerbyInUsd: BigDecimal!
+  amountTokensIn: BigInt! # FeedType == buy: amountCerUsd else amountTokens
+  amountTokensOut: BigInt! # FeedType == sell: amountCerUsd else amountTokens
 
-  transactionFeeInFtm: BigDecimal!
-  transactionFeeInUsd: BigDecimal!
+  amountFeesCollected: BigInt!
+  # (swapEvent.amountTokensIn * swapEvent.currentFee) / FEE_DENORM
 
-  logIndex: BigInt!
-  blockNumber: BigInt!
+  currentFee: BigDecimal!
+  # Event.currentFee / FEE_DENORM
+
+  transaction: Transaction! # Pointer to a specific transaction
 }
 
-type Token @entity {
+type liqudityEvent @entity {
   id: ID!
+
+  token: Bytes!
+
+  feedType: String! # add/remove
+
+  amountTokens: BigInt! # add - amountTokensIn, remove - amountTokensOut
+  amountCerUsd: BigInt! # add - amountCerUsdToMint, remove - amountCerUsdToBurn
+
+  amountLpTokensBalanceToBurn: BigInt!
+
+  transaction: Transaction!
+}
+
+type Transaction @entity {
+  id: ID!
+
+  pool: [Pool!]! @derivedFrom(field: "transaction")
+  swaps: [Swap!]! @derivedFrom(field: "transaction")
+  liqudity: [liqudityEvent!]! @derivedFrom(field: "transaction")
+  from: Bytes!
+
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  gasPrice: BigInt!
+  gasUsed: BigInt!
+}
+
+
+
+
+# Pool info
+
+type Pool @entity {
+  id: ID!
+
+  poolId: BigInt!
+  token: Bytes!
+
+  balanceToken: BigInt!
+  # Event swap
+  # balanceToken = balanceToken + swap.amountTokensIn - swap.amountTokensOut
+
+  # Event liqudity
+  # add
+  # balanceToken += amountTokensIn
+
+  # removed
+  # balanceToken -= amountTokensOut
+
+  balanceCerUsd: BigInt!
+  # Event swap
+  # balanceCerUsd = balanceCerUsd + swap.amountCerUsdIn - swap.amountCerUsdOut
+
+  # Event liqudity
+  # add
+  # balanceCerUsd += amountCerUsdToMint
+  # removed
+  # balanceCerUsd -= liqudityEvent.amountCerUsdToBurn
+
+  CreditCerUsd: BigInt!
+  # if swap.feedType == buy: CreditCerUsd += swap.amountCerUsdIn
+  # else: CreditCerUsd -= swap.amountCerUsdOut
+
+  price: BigDecimal!
+  # balanceToken / balanceCerUsd
+
+  # mirrored from the smart contract
+  symbol: String
+  name: String
+  decimals: Int!
+
+
+  latestDailies: poolDaily!
+  latestHourlies: poolHourly!
+  latestMonthlies: poolMonthly!
+
+  transaction: Transaction!
+}
+
+
+type poolHourly @entity {
+  id: ID! # timestamp rounded to current day by dividing by 3600
+
+  startUnix: Int! # unix timestamp for start of hour
+
+  token: Pool!
+
+  volumeToken: BigInt!
+  # swap.amountTokensIn + swap.amountTokensOut
+  volumeUSD: BigInt!
+  # swap.amountCerUsdIn + swap.amountCerUsdOut
+
+  # mirrored from Pool by current time
+  balanceToken: BigInt!
+  balanceCerUsd: BigInt!
+  CreditCerUsd: BigInt!
+
+  amountFeesCollected: BigInt!
+  # amountFeesCollected += swap.amountFeesCollected 
+  APR: BigDecimal!
+  # APR = (amountFeesCollected * period(365 days)) / (pool.balanceToken * periodInSeconds(fromTimestamp, toTimestamp))
+
+  priceChangePercent: BigDecimal!
+  # priceChangePercent = (previous.price - price) / previousDaily.price;
+
+  previous: poolHourly!
+
+  price: BigDecimal!
+}
+
+type poolDaily @entity {
+  id: ID! # timestamp rounded to current day by dividing by 86400
+
+  startUnix: Int! # unix timestamp for start of day
+
+  token: Pool!
+
+  volumeToken: BigInt!
+  volumeUSD: BigInt!
+
+  # mirrored from Pool by current time
+  balanceToken: BigInt!
+  balanceCerUsd: BigInt!
+  CreditCerUsd: BigInt!
+
+  amountFeesCollected: BigInt!
+  APR: BigDecimal!
+
+  priceChangePercent: BigDecimal!
+
+  previous: poolDaily!
+
+  price: BigDecimal!
+}
+
+type poolMonthly @entity {
+  id: ID! # timestamp rounded to current day by dividing by 2592000
+
+  startUnix: Int! # unix timestamp for start of month
+
+  token: Pool!
+
+  volumeToken: BigInt!
+  volumeUSD: BigInt!
+
+  # mirrored from Pool by current time
+  balanceToken: BigInt!
+  balanceCerUsd: BigInt!
+  CreditCerUsd: BigInt!
+
+  amountFeesCollected: BigInt!
+  APR: BigDecimal!
+
+  priceChangePercent: BigDecimal!
+
+  previous: poolMonthly!
+
   price: BigDecimal!
 }
