@@ -1,4 +1,4 @@
-export { PairCreated } from './pairCreated';
+export { PoolCreated } from './poolCreated';
 
 export { LiquidityAdded, LiquidityRemoved } from './liquidity';
 

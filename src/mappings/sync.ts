@@ -3,12 +3,13 @@ import { Pool } from '../types/schema';
 import { calculatePoolPrice, ZERO_BD, ZERO_BI } from './helpers';
 
 export function handleSync(Event: SyncEvent): void {
-    let pool = Pool.load(Event.params.token.toHexString());
+    let pool = Pool.load(Event.params._token.toHexString());
     if(!pool) {
-        pool = new Pool(Event.params.token.toHexString())
+        pool = new Pool(Event.params._token.toHexString())
     }
-    pool.balanceToken = Event.params.newBalanceToken;
-    pool.balanceCerUsd = Event.params.newBalanceCerUsd;
+    pool.balanceToken = Event.params._newBalanceToken;
+    pool.balanceCerUsd = Event.params._newBalanceCerUsd;
+    pool.CreditCerUsd = Event.params._newCreditCerUsd
     calculatePoolPrice(pool);
 
     // createSnapshot(

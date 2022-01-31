@@ -4,9 +4,9 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: CerbySwap
-    network: fantom
+    network: bsc
     source:
-      address: "0x57fe5E6E1e189BEde3712d9349E494C62F766c74"
+      address: "0x20f77400dC962986A01e619c127569768960dD98"
       abi: CerbySwap
       startBlock: 0
     mapping:
@@ -22,14 +22,14 @@ dataSources:
         - name: ERC20
           file: ./abis/ERC20.json
       eventHandlers:
-        - event: PairCreated(address,uint256)
-          handler: PairCreated
+        - event: PoolCreated(address,address,uint256)
+          handler: PoolCreated
         - event: LiquidityAdded(address,uint256,uint256,uint256)
           handler: LiquidityAdded
         - event: LiquidityRemoved(address,uint256,uint256,uint256)
           handler: LiquidityRemoved
         - event: Swap(address,address,uint256,uint256,uint256,uint256,uint256,address)
           handler: handleSwap
-        - event: Sync(address,uint256,uint256)
+        - event: Sync(address,uint256,uint256,uint256)
           handler: handleSync
       file: ./src/mappings/index.ts

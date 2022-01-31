@@ -173,6 +173,7 @@ type Pool @entity {
 
   poolId: BigInt!
   token: Bytes!
+  vaultAddress: Bytes!
 
   balanceToken: BigInt!
   # Event swap

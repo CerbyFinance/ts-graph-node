@@ -8,8 +8,8 @@
     "build": "graph build",
     "create-local": "graph create test/spookyswap --node http://127.0.0.1:8020",
     "deploy-local": "graph deploy test/spookyswap --debug --ipfs http://127.0.0.1:5001 --node http://127.0.0.1:8020",
-    "create": "graph create test/spooky --node http://sergey2.cerby.fi:8020",
-    "deploy": "graph deploy test/spooky --ipfs http://10.8.0.1:5002 --node http://sergey2.cerby.fi:8020/ --debug",
+    "create": "graph create CerbySwap/ganache --node http://sergey2.cerby.fi:8020",
+    "deploy": "graph deploy CerbySwap/ganache --ipfs http://10.8.0.1:5002 --node http://sergey2.cerby.fi:8020/ --debug",
     "deploy-staging": "graph deploy $THE_GRAPH_GITHUB_USER/$THE_GRAPH_SUBGRAPH_NAME /Uniswap --ipfs https://api.staging.thegraph.com/ipfs/ --node https://api.staging.thegraph.com/deploy/",
     "watch-local": "graph deploy graphprotocol/Uniswap2 --watch --debug --node http://127.0.0.1:8020/ --ipfs http://localhost:5001"
   },

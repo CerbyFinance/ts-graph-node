@@ -7,15 +7,13 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { addFees, addTVL, removeTVL } from './snapshots/global/Global';
 
 export function handleSwap(Event: SwapEvent): void {
-    let pool = Pool.load(Event.params.token.toHexString());
+    let pool = Pool.load(Event.params._token.toHexString());
     if(!pool) {
-        pool = new Pool(Event.params.token.toHexString())
+        pool = new Pool(Event.params._token.toHexString())
     }
 
-
-
-    pool.balanceToken = pool.balanceToken.plus(Event.params.amountTokensIn).minus(Event.params.amountTokensOut);
-    pool.balanceCerUsd = pool.balanceCerUsd.plus(Event.params.amountCerUsdIn).minus(Event.params.amountCerUsdOut);
+    pool.balanceToken = pool.balanceToken.plus(Event.params._amountTokensIn).minus(Event.params.__amountTokensOut);
+    pool.balanceCerUsd = pool.balanceCerUsd.plus(Event.params._amountCerUsdIn).minus(Event.params.amountCerUsdOut);
     calculatePoolPrice(pool);
     pool.save()
 
@@ -28,31 +26,31 @@ export function handleSwap(Event: SwapEvent): void {
     if(Event.params.amountCerUsdOut.equals(ZERO_BI)) {
         swap.feedType =  'buy';
 
-        swap.amountTokensIn  = Event.params.amountCerUsdIn;
-        swap.amountTokensOut = Event.params.amountTokensOut;
-        addTVL(Event.params.amountCerUsdIn, Event.block.timestamp);
+        swap.amountTokensIn  = Event.params._amountCerUsdIn;
+        swap.amountTokensOut = Event.params.__amountTokensOut;
+        addTVL(Event.params._amountCerUsdIn, Event.block.timestamp);
     } else {
         swap.feedType =  'sell';
-        swap.amountTokensIn  = Event.params.amountTokensIn;
+        swap.amountTokensIn  = Event.params._amountTokensIn;
         swap.amountTokensOut = Event.params.amountCerUsdOut;
         removeTVL(Event.params.amountCerUsdOut, Event.block.timestamp)
     }
 
     const FEE_DENORM = BigInt.fromI32(10000);
 
-    swap.currentFee = Event.params.currentFee.divDecimal(FEE_DENORM.toBigDecimal());
+    swap.currentFee = Event.params._currentFee.divDecimal(FEE_DENORM.toBigDecimal());
 
     addFees(swap.currentFee, Event.block.timestamp);
 
-    swap.amountFeesCollected = (swap.amountTokensIn.times(Event.params.currentFee)).div(FEE_DENORM)
+    swap.amountFeesCollected = (swap.amountTokensIn.times(Event.params._currentFee)).div(FEE_DENORM)
 
     swap.price = pool.price;
 
     swap.transaction = getOrCreateTransaction(Event);
 
-    swap.token = Event.params.token;
-    swap.sender = Event.params.sender;
-    swap.to = Event.params.transferTo;
+    swap.token = Event.params._token;
+    swap.sender = Event.params._sender;
+    swap.to = Event.params._transferTo;
 
     // createSnapshot({
     //     price: pool.price,
@@ -70,7 +68,7 @@ export function handleSwap(Event: SwapEvent): void {
 
 
     createPoolSnapshot(
-        Event.params.token, // Token address
+        Event.params._token, // Token address
         pool.price, // Price
         Event.block.timestamp, // StartUnix
 
@@ -79,8 +77,8 @@ export function handleSwap(Event: SwapEvent): void {
         ZERO_BI,
 
         // Trade
-        Event.params.amountCerUsdIn.plus(Event.params.amountCerUsdOut),
-        Event.params.amountTokensIn.plus(Event.params.amountTokensOut),
+        Event.params._amountCerUsdIn.plus(Event.params.amountCerUsdOut),
+        Event.params._amountTokensIn.plus(Event.params.__amountTokensOut),
         swap.amountFeesCollected
     )
 

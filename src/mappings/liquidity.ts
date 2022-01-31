@@ -7,29 +7,29 @@ import { addTVL } from './snapshots/global/Global';
 
 
 export function LiquidityAdded(Event: AddedEvent): void {
-    let pool = Pool.load(Event.params.token.toHexString());
+    let pool = Pool.load(Event.params._token.toHexString());
     if(!pool) {
-        pool = new Pool(Event.params.token.toHexString())
+        pool = new Pool(Event.params._token.toHexString())
     }
-    pool.balanceToken = pool.balanceToken.plus(Event.params.amountTokensIn);
-    pool.balanceCerUsd = pool.balanceCerUsd.plus(Event.params.amountCerUsdToMint);
+    pool.balanceToken = pool.balanceToken.plus(Event.params._amountTokensIn);
+    pool.balanceCerUsd = pool.balanceCerUsd.plus(Event.params._amountCerUsdToMint);
 
     calculatePoolPrice(pool);
     pool.save()
 
     let liqudity = new liqudityEvent(Event.transaction.hash.toHexString());
-    liqudity.token = Event.params.token;
+    liqudity.token = Event.params._token;
 
     liqudity.feedType = 'add';
 
-    liqudity.amountTokens = Event.params.amountTokensIn;
-    liqudity.amountCerUsd = Event.params.amountCerUsdToMint;
+    liqudity.amountTokens = Event.params._amountTokensIn;
+    liqudity.amountCerUsd = Event.params._amountCerUsdToMint;
 
-    liqudity.amountLpTokensBalanceToBurn = Event.params.lpAmount;
+    liqudity.amountLpTokensBalanceToBurn = Event.params._lpAmount;
 
     liqudity.transaction = getOrCreateTransaction(Event);
 
-    addTVL(Event.params.amountCerUsdToMint, Event.block.timestamp);
+    addTVL(Event.params._amountCerUsdToMint, Event.block.timestamp);
 
 
     // createPoolSnapshot({
@@ -47,7 +47,7 @@ export function LiquidityAdded(Event: AddedEvent): void {
     // })
 
     createPoolSnapshot(
-        Event.params.token, // Token address
+        Event.params._token, // Token address
         pool.price, // Price
         Event.block.timestamp, // StartUnix
 
@@ -65,34 +65,34 @@ export function LiquidityAdded(Event: AddedEvent): void {
 }
 
 export function LiquidityRemoved(Event: RemovedEvent): void {
-    let pool = Pool.load(Event.params.token.toHexString());
+    let pool = Pool.load(Event.params._token.toHexString());
     if(!pool) {
-        pool = new Pool(Event.params.token.toHexString())
+        pool = new Pool(Event.params._token.toHexString())
         return
     }
-    pool.balanceToken = pool.balanceToken.minus(Event.params.amountTokensOut);
-    pool.balanceCerUsd = pool.balanceCerUsd.minus(Event.params.amountCerUsdToBurn);
+    pool.balanceToken = pool.balanceToken.minus(Event.params._amountTokensOut);
+    pool.balanceCerUsd = pool.balanceCerUsd.minus(Event.params._amountCerUsdToBurn);
 
     calculatePoolPrice(pool);
     pool.save()
     
 
     let liqudity = new liqudityEvent(Event.transaction.hash.toHexString());
-    liqudity.token = Event.params.token;
+    liqudity.token = Event.params._token;
 
     liqudity.feedType = 'remove';
 
-    liqudity.amountTokens = Event.params.amountTokensOut;
-    liqudity.amountCerUsd = Event.params.amountCerUsdToBurn;
+    liqudity.amountTokens = Event.params._amountTokensOut;
+    liqudity.amountCerUsd = Event.params._amountCerUsdToBurn;
 
-    liqudity.amountLpTokensBalanceToBurn = Event.params.amountLpTokensBalanceToBurn;
+    liqudity.amountLpTokensBalanceToBurn = Event.params._amountLpTokensBalanceToBurn;
 
     liqudity.transaction = getOrCreateTransaction(Event);
 
-    addTVL(Event.params.amountCerUsdToBurn, Event.block.timestamp);
+    addTVL(Event.params._amountCerUsdToBurn, Event.block.timestamp);
 
     createPoolSnapshot(
-        Event.params.token, // Token address
+        Event.params._token, // Token address
         pool.price, // Price
         Event.block.timestamp, // StartUnix
 
