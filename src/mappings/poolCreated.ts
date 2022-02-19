@@ -3,6 +3,7 @@ import { log, BigInt } from '@graphprotocol/graph-ts'
 import { Pool } from '../types/schema'
 import { calculatePoolPrice, ZERO_BI, ZERO_BD } from './helpers';
 import { ERC20 } from '../types/CerbySwap/ERC20';
+import { CerbySwap } from '../types/CerbySwap/CerbySwap';
 import { getOrCreateTransaction } from './transaction';
 import { addPool, createOrLoadGlobal } from './snapshots/global/Global';
 

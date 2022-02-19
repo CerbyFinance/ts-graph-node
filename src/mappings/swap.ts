@@ -12,8 +12,8 @@ export function handleSwap(Event: SwapEvent): void {
         pool = new Pool(Event.params._token.toHexString())
     }
 
-    pool.balanceToken = pool.balanceToken.plus(Event.params._amountTokensIn).minus(Event.params.__amountTokensOut);
-    pool.balanceCerUsd = pool.balanceCerUsd.plus(Event.params._amountCerUsdIn).minus(Event.params.amountCerUsdOut);
+    pool.balanceToken = pool.balanceToken.plus(Event.params._amountTokensIn).minus(Event.params._amountTokensOut);
+    pool.balanceCerUsd = pool.balanceCerUsd.plus(Event.params._amountCerUsdIn).minus(Event.params._amountCerUsdOut);
     calculatePoolPrice(pool);
     pool.save()
 
@@ -23,17 +23,17 @@ export function handleSwap(Event: SwapEvent): void {
     "-" +
     Event.logIndex.toHexString());
 
-    if(Event.params.amountCerUsdOut.equals(ZERO_BI)) {
+    if(Event.params._amountCerUsdOut.equals(ZERO_BI)) {
         swap.feedType =  'buy';
 
         swap.amountTokensIn  = Event.params._amountCerUsdIn;
-        swap.amountTokensOut = Event.params.__amountTokensOut;
+        swap.amountTokensOut = Event.params._amountTokensOut;
         addTVL(Event.params._amountCerUsdIn, Event.block.timestamp);
     } else {
         swap.feedType =  'sell';
         swap.amountTokensIn  = Event.params._amountTokensIn;
-        swap.amountTokensOut = Event.params.amountCerUsdOut;
-        removeTVL(Event.params.amountCerUsdOut, Event.block.timestamp)
+        swap.amountTokensOut = Event.params._amountCerUsdOut;
+        removeTVL(Event.params._amountCerUsdOut, Event.block.timestamp)
     }
 
     const FEE_DENORM = BigInt.fromI32(10000);
@@ -77,8 +77,8 @@ export function handleSwap(Event: SwapEvent): void {
         ZERO_BI,
 
         // Trade
-        Event.params._amountCerUsdIn.plus(Event.params.amountCerUsdOut),
-        Event.params._amountTokensIn.plus(Event.params.__amountTokensOut),
+        Event.params._amountCerUsdIn.plus(Event.params._amountCerUsdOut),
+        Event.params._amountTokensIn.plus(Event.params._amountTokensOut),
         swap.amountFeesCollected
     )
 
