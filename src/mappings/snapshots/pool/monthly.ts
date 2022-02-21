@@ -20,6 +20,11 @@ export function monthlySnapshot(pool: Pool, token: Address, blockTimestamp: BigI
       tokenMonthData.volumeUSD = ZERO_BI;
       tokenMonthData.amountFeesCollected = ZERO_BI;
       tokenMonthData.APR = ZERO_BD;
+      tokenMonthData.open = ZERO_BD;
+      tokenMonthData.close = ZERO_BD;
+      tokenMonthData.high = ZERO_BD;
+      tokenMonthData.low = ZERO_BD;
+
       if(pool) {
         tokenMonthData.balanceToken = pool.balanceToken;
         tokenMonthData.balanceCerUsd = pool.balanceCerUsd;
@@ -28,6 +33,12 @@ export function monthlySnapshot(pool: Pool, token: Address, blockTimestamp: BigI
             tokenMonthData.previous = tokenMonthID;
         } else {
             tokenMonthData.previous = pool.latestMonthlies;
+            const previousTokenMonthData = poolMonthly.load(pool.latestMonthlies)!;
+            previousTokenMonthData.close = previousTokenMonthData.price;
+            previousTokenMonthData.save();
+            tokenMonthData.open = previousTokenMonthData.price;
+            tokenMonthData.high = previousTokenMonthData.price;
+            tokenMonthData.low = previousTokenMonthData.price;
         }
         pool.latestMonthlies = tokenMonthID;
         pool.save()

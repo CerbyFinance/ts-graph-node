@@ -74,6 +74,12 @@ export function createPoolSnapshot(
 
     if(price) {
         daily.price = price;
+        if(daily.high.lt(price)) {
+            daily.high = price;
+        }
+        if(daily.low.gt(price)) {
+            daily.low = price;
+        }
         if(daily.previous != daily.id) {
             let previousDaily = poolDaily.load(daily.previous);
             // priceChangePercent = (price(period ago) - price(now)) / price(period ago) = +-0.1123456
@@ -85,6 +91,12 @@ export function createPoolSnapshot(
         }
 
         hourly.price = price;
+        if(hourly.high.lt(price)) {
+            hourly.high = price;
+        }
+        if(hourly.low.gt(price)) {
+            hourly.low = price;
+        }
         if(hourly.previous != hourly.id) {
             let previousHourly = poolHourly.load(hourly.previous)!;
             if(previousHourly) {
@@ -95,6 +107,12 @@ export function createPoolSnapshot(
         }
 
         monthly.price = price;
+        if(monthly.high.lt(price)) {
+            monthly.high = price;
+        }
+        if(monthly.low.gt(price)) {
+            monthly.low = price;
+        }
         if(monthly.previous != monthly.id) {
             let previousMonthly = poolMonthly.load(monthly.previous)!;
             if(previousMonthly) {

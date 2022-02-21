@@ -20,6 +20,11 @@ export function dailySnapshot(pool: Pool, token: Address, blockTimestamp: BigInt
       tokenDayData.volumeUSD = ZERO_BI;
       tokenDayData.amountFeesCollected = ZERO_BI;
       tokenDayData.APR = ZERO_BD;
+      tokenDayData.open = ZERO_BD;
+      tokenDayData.close = ZERO_BD;
+      tokenDayData.high = ZERO_BD;
+      tokenDayData.low = ZERO_BD;
+
       if(pool) {
         tokenDayData.balanceToken = pool.balanceToken;
         tokenDayData.balanceCerUsd = pool.balanceCerUsd;
@@ -28,6 +33,12 @@ export function dailySnapshot(pool: Pool, token: Address, blockTimestamp: BigInt
             tokenDayData.previous = tokenDayID;
         } else {
             tokenDayData.previous = pool.latestDailies;
+            const previousTokenDayData = poolDaily.load(pool.latestDailies)!;
+            previousTokenDayData.close = previousTokenDayData.price;
+            previousTokenDayData.save();
+            tokenDayData.open = previousTokenDayData.price;
+            tokenDayData.high = previousTokenDayData.price;
+            tokenDayData.low = previousTokenDayData.price;
         }
         pool.latestDailies = tokenDayID;
         pool.save()

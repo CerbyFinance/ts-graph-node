@@ -28,7 +28,7 @@ export function PoolCreated(Event: PoolEvent): void {
     if(symbol != null && !symbol.reverted) {
         pool.symbol = symbol.value;
     } else {
-        pool.symbol = 'unknown';
+        pool.symbol = 'UNK';
     }
 
     let name = ERC20.bind(Event.params._token).try_name();

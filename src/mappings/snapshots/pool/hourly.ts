@@ -20,6 +20,12 @@ export function hourlySnapshot(pool: Pool, token: Address, blockTimestamp: BigIn
       tokenHourData.volumeUSD = ZERO_BI;
       tokenHourData.amountFeesCollected = ZERO_BI;
       tokenHourData.APR = ZERO_BD;
+
+      tokenHourData.open = ZERO_BD;
+      tokenHourData.close = ZERO_BD;
+      tokenHourData.high = ZERO_BD;
+      tokenHourData.low = ZERO_BD;
+
       if(pool) {
         tokenHourData.balanceToken = pool.balanceToken;
         tokenHourData.balanceCerUsd = pool.balanceCerUsd;
@@ -28,6 +34,12 @@ export function hourlySnapshot(pool: Pool, token: Address, blockTimestamp: BigIn
             tokenHourData.previous = tokenHourID;
         } else {
             tokenHourData.previous = pool.latestHourlies;
+            const previousTokenHourData = poolHourly.load(pool.latestHourlies)!;
+            previousTokenHourData.close = previousTokenHourData.price;
+            previousTokenHourData.save();
+            tokenHourData.open = previousTokenHourData.price;
+            tokenHourData.high = previousTokenHourData.price;
+            tokenHourData.low = previousTokenHourData.price;
         }
         pool.latestHourlies = tokenHourID;
         pool.save()
