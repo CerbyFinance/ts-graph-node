@@ -1,0 +1,37 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: CerbySwap
+    network: bsc
+    source:
+      address: "0xfAf360f184788b00623828165405D7F52820D789"
+      abi: CerbySwap
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Swap
+        - Pool
+      abis:
+        - name: CerbySwap
+          file: ./abis/CerbySwap.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: PoolCreated(address,address,uint256)
+          handler: PoolCreated
+        - event: LiquidityAdded(address,uint256,uint256,uint256)
+          handler: LiquidityAdded
+        - event: LiquidityRemoved(address,uint256,uint256,uint256)
+          handler: LiquidityRemoved
+        - event: Swap(address,address,uint256,uint256,uint256,uint256,uint256,address)
+          handler: handleSwap
+        - event: Sync(address,uint256,uint256,uint256)
+          handler: handleSync
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/index.ts
