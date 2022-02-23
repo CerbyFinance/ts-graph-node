@@ -6,9 +6,9 @@ dataSources:
     name: CerbySwap
     network: avax
     source:
-      address: "0xfAf360f184788b00623828165405D7F52820D789"
+      address: "0x777777C4e9f6E52bC71e15b7C87a85431D956F2D"
       abi: CerbySwap
-      startBlock: 0
+      startBlock: 11244350
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
