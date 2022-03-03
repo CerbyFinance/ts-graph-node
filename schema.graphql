@@ -245,6 +245,11 @@ type poolHourly @entity {
   previous: poolHourly!
 
   price: BigDecimal!
+
+  open: BigDecimal!
+  high: BigDecimal!
+  low: BigDecimal!
+  close: BigDecimal!
 }
 
 type poolDaily @entity {
@@ -270,6 +275,11 @@ type poolDaily @entity {
   previous: poolDaily!
 
   price: BigDecimal!
+
+  open: BigDecimal!
+  high: BigDecimal!
+  low: BigDecimal!
+  close: BigDecimal!
 }
 
 type poolMonthly @entity {
@@ -295,6 +305,11 @@ type poolMonthly @entity {
   previous: poolMonthly!
 
   price: BigDecimal!
+
+  open: BigDecimal!
+  high: BigDecimal!
+  low: BigDecimal!
+  close: BigDecimal!
 }
 
 type Block @entity {
