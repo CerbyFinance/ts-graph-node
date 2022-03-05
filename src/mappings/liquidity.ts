@@ -3,7 +3,7 @@ import { Pool, liqudityEvent } from '../types/schema';
 import { calculatePoolPrice, fetchTokenDecimals, ZERO_BI } from './helpers';
 import { getOrCreateTransaction } from './transaction';
 import { createPoolSnapshot } from './snapshots/pool/snapshot';
-import { addTVL } from './snapshots/global/Global';
+import { addTVL, removeTVL } from './snapshots/global/Global';
 
 
 export function LiquidityAdded(Event: AddedEvent): void {
@@ -89,7 +89,7 @@ export function LiquidityRemoved(Event: RemovedEvent): void {
 
     liqudity.transaction = getOrCreateTransaction(Event);
 
-    addTVL(Event.params._amountCerUsdToBurn, Event.block.timestamp);
+    removeTVL(Event.params._amountCerUsdToBurn, Event.block.timestamp);
 
     createPoolSnapshot(
         Event.params._token, // Token address

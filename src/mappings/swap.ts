@@ -87,4 +87,3 @@ export function handleSwap(Event: SwapEvent): void {
 
     swap.save();
 }
-
