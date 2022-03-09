@@ -3,8 +3,6 @@ import { Pool } from "../types/schema";
 import { ERC20 } from "../types/CerbySwap/ERC20";
 import { ERC20SymbolBytes } from '../types/CerbySwap/ERC20SymbolBytes';
 import { ERC20NameBytes } from '../types/CerbySwap/ERC20NameBytes';
-// import { CerbySwap } from "../types/CerbySwap/CerbySwap";
-// import { Factory as FactoryContract } from '../types/templates/Pair/Factory'
 import { TokenDefinition } from './tokenDefinition'
 
 export let ZERO_BI = BigInt.fromI32(0);

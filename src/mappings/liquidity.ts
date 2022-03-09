@@ -18,7 +18,7 @@ export function LiquidityAdded(Event: AddedEvent): void {
     pool.save()
 
     let liqudity = new liqudityEvent(Event.transaction.hash.toHexString());
-    liqudity.token = Event.params._token;
+    liqudity.token = Event.params._token.toHexString();
 
     liqudity.feedType = 'add';
 
@@ -78,7 +78,7 @@ export function LiquidityRemoved(Event: RemovedEvent): void {
     
 
     let liqudity = new liqudityEvent(Event.transaction.hash.toHexString());
-    liqudity.token = Event.params._token;
+    liqudity.token = Event.params._token.toHexString();
 
     liqudity.feedType = 'remove';
 

@@ -115,7 +115,7 @@ type Swap @entity {
   # if amountCerUsdIn != 0: Buy
   # else Sell
 
-  token: Bytes!
+  token: Pool!
 
   sender: Bytes!
   to: Bytes!
@@ -137,7 +137,7 @@ type Swap @entity {
 type liqudityEvent @entity {
   id: ID!
 
-  token: Bytes!
+  token: Pool!
 
   feedType: String! # add/remove
 

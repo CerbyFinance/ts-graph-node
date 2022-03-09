@@ -10,19 +10,19 @@
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "account",
+				"name": "_account",
 				"type": "address"
 			},
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "operator",
+				"name": "_operator",
 				"type": "address"
 			},
 			{
 				"indexed": false,
 				"internalType": "bool",
-				"name": "approved",
+				"name": "_approved",
 				"type": "bool"
 			}
 		],
@@ -165,13 +165,13 @@
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "__amountTokensOut",
+				"name": "_amountTokensOut",
 				"type": "uint256"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "amountCerUsdOut",
+				"name": "_amountCerUsdOut",
 				"type": "uint256"
 			},
 			{
@@ -227,31 +227,31 @@
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "operator",
+				"name": "_operator",
 				"type": "address"
 			},
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "from",
+				"name": "_from",
 				"type": "address"
 			},
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "to",
+				"name": "_to",
 				"type": "address"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256[]",
-				"name": "ids",
+				"name": "_ids",
 				"type": "uint256[]"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256[]",
-				"name": "values",
+				"name": "_values",
 				"type": "uint256[]"
 			}
 		],
@@ -264,54 +264,35 @@
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "operator",
+				"name": "_operator",
 				"type": "address"
 			},
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "from",
+				"name": "_from",
 				"type": "address"
 			},
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "to",
+				"name": "_to",
 				"type": "address"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "id",
+				"name": "_id",
 				"type": "uint256"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "value",
+				"name": "_value",
 				"type": "uint256"
 			}
 		],
 		"name": "TransferSingle",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "value",
-				"type": "string"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			}
-		],
-		"name": "URI",
 		"type": "event"
 	},
 	{
@@ -395,13 +376,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "adminInitialize",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "string",
@@ -409,7 +383,25 @@
 				"type": "string"
 			}
 		],
-		"name": "adminSetURI",
+		"name": "adminSetUrlPrefix",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_newContractName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_newContractSymbol",
+				"type": "string"
+			}
+		],
+		"name": "adminUpdateNameAndSymbol",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -454,25 +446,7 @@
 				"type": "tuple"
 			}
 		],
-		"name": "adminUpdateFeesAndTvlMultipliers",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_newContractName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_newContractSymbol",
-				"type": "string"
-			}
-		],
-		"name": "adminUpdateNameAndSymbol",
+		"name": "adminUpdateSettings",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -593,6 +567,25 @@
 				"type": "address"
 			}
 		],
+		"name": "generateVaultAddressByToken",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_token",
+				"type": "address"
+			}
+		],
 		"name": "getCurrentOneMinusFeeBasedOnTrades",
 		"outputs": [
 			{
@@ -670,7 +663,7 @@
 				"type": "address[]"
 			}
 		],
-		"name": "getPoolsByTokens",
+		"name": "getPoolsBalancesByTokens",
 		"outputs": [
 			{
 				"components": [
@@ -686,6 +679,52 @@
 					}
 				],
 				"internalType": "struct CerbySwapV1_Declarations.PoolBalances[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address[]",
+				"name": "_tokens",
+				"type": "address[]"
+			}
+		],
+		"name": "getPoolsByTokens",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint40[6]",
+						"name": "tradeVolumePerPeriodInCerUsd",
+						"type": "uint40[6]"
+					},
+					{
+						"internalType": "uint16",
+						"name": "lastCachedOneMinusFee",
+						"type": "uint16"
+					},
+					{
+						"internalType": "uint8",
+						"name": "lastCachedTradePeriod",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint120",
+						"name": "lastSqrtKValue",
+						"type": "uint120"
+					},
+					{
+						"internalType": "uint120",
+						"name": "creditCerUsd",
+						"type": "uint120"
+					}
+				],
+				"internalType": "struct CerbySwapV1_Declarations.Pool[]",
 				"name": "",
 				"type": "tuple[]"
 			}
@@ -898,39 +937,6 @@
 				"type": "address"
 			},
 			{
-				"internalType": "uint256[]",
-				"name": "_ids",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "_amounts",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_data",
-				"type": "bytes"
-			}
-		],
-		"name": "safeBatchTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_to",
-				"type": "address"
-			},
-			{
 				"internalType": "uint256",
 				"name": "_id",
 				"type": "uint256"
@@ -942,7 +948,7 @@
 			},
 			{
 				"internalType": "bytes",
-				"name": "_data",
+				"name": "",
 				"type": "bytes"
 			}
 		],
@@ -967,25 +973,6 @@
 		"name": "setApprovalForAll",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes4",
-				"name": "interfaceId",
-				"type": "bytes4"
-			}
-		],
-		"name": "supportsInterface",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -1087,46 +1074,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "testInit",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_testCerbyToken",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_cerUsdToken",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_testUsdcToken",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "testSetupTokens",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

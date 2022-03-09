@@ -48,7 +48,7 @@ export function handleSwap(Event: SwapEvent): void {
 
     swap.transaction = getOrCreateTransaction(Event);
 
-    swap.token = Event.params._token;
+    swap.token = Event.params._token.toHexString();
     swap.sender = Event.params._sender;
     swap.to = Event.params._transferTo;
 

@@ -4,9 +4,9 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: CerbySwap
-    network: bsc
+    network: ttt
     source:
-      address: "0x20f77400dC962986A01e619c127569768960dD98"
+      address: "0xfAf360f184788b00623828165405D7F52820D789"
       abi: CerbySwap
       startBlock: 0
     mapping:
@@ -21,6 +21,10 @@ dataSources:
           file: ./abis/CerbySwap.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
       eventHandlers:
         - event: PoolCreated(address,address,uint256)
           handler: PoolCreated
