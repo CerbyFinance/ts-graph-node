@@ -1,5 +1,5 @@
 import { ethereum, BigInt } from '@graphprotocol/graph-ts';
-import { Transaction } from '../types/schema';
+import { Transaction, Pool, poolTransaction } from '../types/schema';
 import { addTransaction, createOrLoadGlobal } from './snapshots/global/Global';
 
 export function getOrCreateTransaction(event: ethereum.Event): string {
@@ -15,4 +15,16 @@ export function getOrCreateTransaction(event: ethereum.Event): string {
         addTransaction(1, event.block.timestamp);
     }
     return event.transaction.hash.toHexString();
+}
+
+export function CreatePoolTransaction(pool: string, currentTransaction: string, event: ethereum.Event): void {
+    let transaction = poolTransaction.load(pool + "-" + currentTransaction);
+    if(!transaction) {
+        transaction = new poolTransaction(pool + "-" + currentTransaction);
+        transaction.pool = pool;
+        transaction.transaction = currentTransaction;
+        transaction.timestamp = event.block.timestamp;
+
+        transaction.save();
+    }
 }

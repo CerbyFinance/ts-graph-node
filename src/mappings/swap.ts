@@ -2,7 +2,7 @@ import { Swap as SwapEvent } from '../types/CerbySwap/CerbySwap';
 import { Pool, Swap, Transaction } from '../types/schema';
 import { calculatePoolPrice, ZERO_BI } from './helpers';
 import { createPoolSnapshot } from './snapshots/pool/snapshot';
-import { getOrCreateTransaction } from './transaction';
+import { CreatePoolTransaction, getOrCreateTransaction } from './transaction';
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { addFees, addTVL, removeTVL } from './snapshots/global/Global';
 
@@ -15,7 +15,7 @@ export function handleSwap(Event: SwapEvent): void {
     pool.balanceToken = pool.balanceToken.plus(Event.params._amountTokensIn).minus(Event.params._amountTokensOut);
     pool.balanceCerUsd = pool.balanceCerUsd.plus(Event.params._amountCerUsdIn).minus(Event.params._amountCerUsdOut);
     calculatePoolPrice(pool);
-    pool.save()
+    pool.save();
 
     let swap = new Swap(Event.block.hash.toHexString() +
     "-" +
@@ -47,6 +47,7 @@ export function handleSwap(Event: SwapEvent): void {
     swap.price = pool.price;
 
     swap.transaction = getOrCreateTransaction(Event);
+    CreatePoolTransaction(pool.id, swap.transaction, Event);
 
     swap.token = Event.params._token.toHexString();
     swap.sender = Event.params._sender;
@@ -66,6 +67,7 @@ export function handleSwap(Event: SwapEvent): void {
     //     }
     // })
 
+    swap.save();
 
     createPoolSnapshot(
         Event.params._token, // Token address
@@ -81,9 +83,4 @@ export function handleSwap(Event: SwapEvent): void {
         Event.params._amountTokensIn.plus(Event.params._amountTokensOut),
         swap.amountFeesCollected
     )
-
-
-    // swap.transactionFee = Event.params.currentFee;
-
-    swap.save();
 }

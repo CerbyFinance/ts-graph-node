@@ -1,7 +1,7 @@
 import { LiquidityAdded as AddedEvent, LiquidityRemoved as RemovedEvent } from '../types/CerbySwap/CerbySwap';
 import { Pool, liqudityEvent } from '../types/schema';
 import { calculatePoolPrice, fetchTokenDecimals, ZERO_BI } from './helpers';
-import { getOrCreateTransaction } from './transaction';
+import { getOrCreateTransaction, CreatePoolTransaction } from './transaction';
 import { createPoolSnapshot } from './snapshots/pool/snapshot';
 import { addTVL, removeTVL } from './snapshots/global/Global';
 
@@ -17,7 +17,12 @@ export function LiquidityAdded(Event: AddedEvent): void {
     calculatePoolPrice(pool);
     pool.save()
 
-    let liqudity = new liqudityEvent(Event.transaction.hash.toHexString());
+    let liqudity = new liqudityEvent(Event.block.hash.toHexString() +
+        "-" +
+        Event.transaction.hash.toHexString() +
+        "-" +
+        Event.logIndex.toHexString());
+
     liqudity.token = Event.params._token.toHexString();
 
     liqudity.feedType = 'add';
@@ -28,6 +33,8 @@ export function LiquidityAdded(Event: AddedEvent): void {
     liqudity.amountLpTokensBalanceToBurn = Event.params._lpAmount;
 
     liqudity.transaction = getOrCreateTransaction(Event);
+
+    CreatePoolTransaction(pool.id, liqudity.transaction, Event);
 
     addTVL(Event.params._amountCerUsdToMint, Event.block.timestamp);
 

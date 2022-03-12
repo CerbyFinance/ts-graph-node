@@ -149,12 +149,19 @@ type liqudityEvent @entity {
   transaction: Transaction!
 }
 
+type poolTransaction @entity {
+  id: ID!
+  pool: Pool!
+  transaction: Transaction!
+  timestamp: BigInt!
+}
+
 type Transaction @entity {
   id: ID!
 
-  pool: [Pool!]! @derivedFrom(field: "transaction")
-  swaps: [Swap!]! @derivedFrom(field: "transaction")
-  liqudity: [liqudityEvent!]! @derivedFrom(field: "transaction")
+  pool: [Pool!] @derivedFrom(field: "transaction")
+  swaps: [Swap!] @derivedFrom(field: "transaction")
+  liqudity: [liqudityEvent!] @derivedFrom(field: "transaction")
   from: Bytes!
 
   timestamp: BigInt!
@@ -212,6 +219,8 @@ type Pool @entity {
   latestDailies: poolDaily!
   latestHourlies: poolHourly!
   latestMonthlies: poolMonthly!
+
+  poolTransactions: [poolTransaction!] @derivedFrom(field: "pool")
 
   transaction: Transaction!
 }
