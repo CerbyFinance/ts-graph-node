@@ -132,6 +132,8 @@ type Swap @entity {
   # Event.currentFee / FEE_DENORM
 
   transaction: Transaction! # Pointer to a specific transaction
+
+  logIndex: BigInt!
 }
 
 type liqudityEvent @entity {
@@ -147,6 +149,8 @@ type liqudityEvent @entity {
   amountLpTokensBalanceToBurn: BigInt!
 
   transaction: Transaction!
+
+  logIndex: BigInt!
 }
 
 type poolTransaction @entity {

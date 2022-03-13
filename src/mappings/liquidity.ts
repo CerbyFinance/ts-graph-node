@@ -96,6 +96,8 @@ export function LiquidityRemoved(Event: RemovedEvent): void {
 
     liqudity.transaction = getOrCreateTransaction(Event);
 
+    liqudity.logIndex = Event.logIndex;
+
     removeTVL(Event.params._amountCerUsdToBurn, Event.block.timestamp);
 
     createPoolSnapshot(

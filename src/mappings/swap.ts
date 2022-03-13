@@ -52,6 +52,7 @@ export function handleSwap(Event: SwapEvent): void {
     swap.token = Event.params._token.toHexString();
     swap.sender = Event.params._sender;
     swap.to = Event.params._transferTo;
+    swap.logIndex = Event.logIndex;
 
     // createSnapshot({
     //     price: pool.price,
