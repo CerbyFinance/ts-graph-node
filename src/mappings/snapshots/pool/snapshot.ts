@@ -82,9 +82,9 @@ export function createPoolSnapshot(
         }
         if(daily.previous != daily.id) {
             let previousDaily = poolDaily.load(daily.previous);
-            // priceChangePercent = (price(period ago) - price(now)) / price(period ago) = +-0.1123456
+            // priceChangePercent = (price(now) - price(period ago)) / price(period ago) = +-11.23456
             if(previousDaily) {
-                daily.priceChangePercent = (previousDaily.price.minus(price)).div(previousDaily.price);
+                daily.priceChangePercent = (price.minus(previousDaily.price)).div(previousDaily.price).times(BigDecimal.fromString("100"));
             }
         } else {
             daily.priceChangePercent = ZERO_BD;
