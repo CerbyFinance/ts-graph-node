@@ -37,22 +37,19 @@ export function createPoolSnapshot(
     const hourly = hourlySnapshot(pool, Token, blockTimestamp),
           daily = dailySnapshot(pool, Token, blockTimestamp),
           monthly = monthlySnapshot(pool, Token, blockTimestamp);
-    
-
-    if(liqudityCerUsd.notEqual(ZERO_BI)) {
-        daily.balanceCerUsd = liqudityCerUsd;
-        daily.balanceToken = liqudityToken;
 
 
-        hourly.balanceCerUsd = liqudityCerUsd;
-        hourly.balanceToken = liqudityToken;
+    daily.balanceCerUsd = pool.balanceCerUsd;
+    daily.balanceToken = pool.balanceToken;
+
+    hourly.balanceCerUsd = pool.balanceCerUsd;
+    hourly.balanceToken = pool.balanceToken;
+
+    monthly.balanceCerUsd = pool.balanceCerUsd;
+    monthly.balanceToken = pool.balanceToken;
 
 
-        monthly.balanceCerUsd = liqudityCerUsd;
-        monthly.balanceToken = liqudityToken;
-
-
-    } else if(tradeCerUsd.notEqual(ZERO_BI)) {
+    if(tradeCerUsd.notEqual(ZERO_BI)) {
         addVolumeUsd(tradeCerUsd, blockTimestamp);
         daily.volumeUSD = daily.volumeUSD.plus(tradeCerUsd);
         daily.volumeToken = daily.volumeToken.plus(tradeToken);
