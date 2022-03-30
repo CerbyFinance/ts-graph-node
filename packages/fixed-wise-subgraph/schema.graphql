@@ -20,4 +20,5 @@ type Stake @entity {
   startTx: Bytes!
   endTx: Bytes!
   timestamp: BigInt!
+  feedType: String!
 }

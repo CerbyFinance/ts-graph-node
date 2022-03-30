@@ -33,6 +33,7 @@ export function handleStakeStart (event: StakeStart): void {
   stake.timestamp = event.block.timestamp;
   stake.startTx = event.transaction.hash;
   stake.endTx = null;
+  stake.feedType = "stakeStarted";
   stake.save()
 }
 
@@ -65,6 +66,11 @@ export function handleStakeEnd (event: StakeEnd): void {
   stake.penalty = event.params.penaltyAmount
   stake.reward = event.params.rewardAmount
   stake.timestamp = event.block.timestamp;
+  if(event.params.penaltyAmount.notEqual(ZERO)) {
+    stake.feedType = "stakeCanceled"
+  } else {
+    stake.feedType = "stakeCompleted"
+  }
   stake.save()
 }
 
