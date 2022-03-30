@@ -1,0 +1,31 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: SourceChain
+    network: kovan
+    source:
+      address: "0xf8096b2c9d95Ea1BEbaE926b00A7788553d91861"
+      abi: CrossChainBridge
+      startBlock: 27493338
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - BridgeTransfer
+        - Global
+      abis:
+        - name: CrossChainBridge
+          file: ./abis/CrossChainBridge.json
+      eventHandlers:
+        - event: ProofOfBurn(address,address,uint256,uint256,uint256,uint256,uint256,bytes32)
+          handler: handleProofOfBurn
+        - event: ProofOfMint(address,address,uint256,uint256,bytes32)
+          handler: handleProofOfMint
+        - event: ApprovedTransaction(bytes32)
+          handler: handleApprovedTransaction
+        - event: BulkApprovedTransactions(bytes32[])
+          handler: handleBulkApprovedTransaction
+      file: ./src/mapping-source-chain.ts

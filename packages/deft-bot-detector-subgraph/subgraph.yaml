@@ -1,0 +1,47 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Uniswap
+    network: mainnet
+    source:
+      address: "0xfa6687922bf40ff51bcd45f9fd339215a4869d82"
+      abi: UniswapPair
+      startBlock: 12495074
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Transaction
+        - Swap
+        - Global
+      abis:
+        - name: UniswapPair
+          file: ./abis/UniswapPair.json
+      eventHandlers:
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+      file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: Deft
+    network: mainnet
+    source:
+      address: "0xdef1fac7bf08f173d286bbbdcbeeade695129840"
+      abi: DeftToken
+      startBlock: 12494175
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Transaction
+        - Recipient
+      abis:
+        - name: DeftToken
+          file: ./abis/DeftToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/mapping.ts

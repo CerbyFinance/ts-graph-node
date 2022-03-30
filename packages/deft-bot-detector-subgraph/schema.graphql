@@ -1,0 +1,60 @@
+type Swap @entity {
+  id: ID!
+  txHash: Bytes!
+
+  # amountOutMin: BigInt!
+  # amountOutMax: BigInt!
+
+  fnName: String!
+  # path: [Bytes!]
+  slippage: BigDecimal!
+  deadline: BigInt!
+
+  isBot: Boolean!
+  isSlippageBot: Boolean!
+  isDeadlineBot: Boolean!
+
+  transactionAmountInMax: BigInt
+  swapAmountIn: BigInt
+  transactionAmountOutMin: BigInt
+  swapAmountOut: BigInt
+
+  logIndex: BigInt!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
+type Recipient @entity {
+  id: ID!
+  isNewHolder: Boolean!
+  firstTx: String
+  lastTx: String
+}
+
+enum TransactionType {
+  Sell
+  Buy
+  Unknown
+}
+
+type Transaction @entity {
+  id: ID!
+  to: String!
+  type: TransactionType!
+  recipients: [Recipient!]!
+
+  isDeadlineBot: Boolean
+
+  fnName: String!
+  amountInMax: BigInt!
+  amountOutMin: BigInt!
+  deadline: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
+type Global @entity {
+  id: ID!
+  botsDetected: BigInt!
+}

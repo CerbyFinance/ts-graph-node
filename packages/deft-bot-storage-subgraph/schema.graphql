@@ -1,0 +1,11 @@
+type Bot @entity {
+  id: ID!
+}
+
+type Human @entity {
+  id: ID!
+}
+
+type Global @entity {
+  id: ID!
+}

@@ -1,0 +1,20 @@
+type BotTransaction @entity {
+  id: ID!
+  from: Bytes!
+  to: Bytes!
+  taxedAmount: BigInt!
+  transferAmount: BigInt!
+
+  timestamp: BigInt!
+
+  txHash: Bytes!
+  gasPrice: BigInt!
+  gasUsed: BigInt!
+}
+
+type Global @entity {
+  id: ID!
+  botTaxed: BigInt!
+  userTaxed: BigInt!
+  totalTaxed: BigInt!
+}

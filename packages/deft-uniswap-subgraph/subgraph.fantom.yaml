@@ -1,0 +1,47 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema-fantom.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: TraderJoeCerby
+    network: fantom
+    source:
+      address: "0xD450c27c7024f5813449CA30f0D7c4F9d0a19c77"
+      abi: SpookySwapPair
+      startBlock: 22965000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Swap
+      abis:
+        - name: SpookySwapPair
+          file: ./abis/SpookySwapPair.json
+      eventHandlers:
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+      file: ./src/mapping-spookySwapCerby.ts
+  - kind: ethereum/contract
+    name: TraderJoeUsdc
+    network: fantom
+    source:
+      address: "0x2b4c76d0dc16be1c31d4c1dc53bf9b45987fc75c"
+      abi: SpookySwapPair
+      startBlock: 22965000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+      abis:
+        - name: SpookySwapPair
+          file: ./abis/SpookySwapPair.json
+      eventHandlers:
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+      file: ./src/mapping-traderJoeUsdc.ts

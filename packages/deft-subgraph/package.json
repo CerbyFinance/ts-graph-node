@@ -1,0 +1,27 @@
+{
+  "name": "deft",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ deft/deft",
+    "deploy-remote-binance": "graph deploy --node http://server.wisetoken.me:8020/ --ipfs http://server.wisetoken.me:5001/ deft/deft-binance ./subgraph.binance.yaml",
+    "create-remote-binance": "graph create --node http://server.wisetoken.me:8020/ deft/deft-binance",
+    "remove-remote-binance": "graph remove --node http://server.wisetoken.me:8020/ deft/deft-binance",
+    "deploy-remote-mainnet": "graph deploy --node http://server.wisetoken.me:8020/ --ipfs http://server.wisetoken.me:5001/ deft/deft ./subgraph.mainnet.yaml",
+    "create-remote-mainnet": "graph create --node http://server.wisetoken.me:8020/ deft/deft",
+    "remove-remote-mainnet": "graph remove --node http://server.wisetoken.me:8020/ deft/deft",
+    "deploy-local-kovan": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001/ deft/deft-kovan ./subgraph.kovan.yaml",
+    "create-local-kovan": "graph create --node http://localhost:8020/ deft/deft-kovan",
+    "deploy-remote-ropsten": "graph deploy --node http://server.wisetoken.me:8020/ --ipfs http://server.wisetoken.me:5001/ deft/deft-ropsten ./subgraph.ropsten.yaml",
+    "create-remote-ropsten": "graph create --node http://server.wisetoken.me:8020/ deft/deft-ropsten",
+    "remove-remote-ropsten": "graph remove --node http://server.wisetoken.me:8020/ deft/deft-ropsten",
+    "create-local": "graph create --node http://localhost:8020/ deft/deft",
+    "remove-local": "graph remove --node http://localhost:8020/ deft/deft",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 deft/deft"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.20.0",
+    "@graphprotocol/graph-ts": "0.20.0"
+  }
+}

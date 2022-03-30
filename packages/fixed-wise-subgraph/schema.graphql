@@ -1,0 +1,23 @@
+type Stake @entity {
+  id: ID!
+  staker: Bytes!
+  referrer: Bytes!
+  principal: BigInt!
+  shares: BigInt!
+  cmShares: BigInt!
+  currentShares: BigInt!
+  startDay: BigInt!
+  lockDays: BigInt!
+  daiEquivalent: BigInt!
+  reward: BigInt
+  closeDay: BigInt
+  penalty: BigInt
+  scrapedYodas: BigInt!
+  sharesPenalized: BigInt!
+  referrerSharesPenalized: BigInt!
+  scrapeCount: BigInt!
+  lastScrapeDay: BigInt
+  startTx: Bytes!
+  endTx: Bytes!
+  timestamp: BigInt!
+}

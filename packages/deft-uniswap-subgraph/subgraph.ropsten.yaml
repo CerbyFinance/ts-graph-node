@@ -1,0 +1,47 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: UniswapDeft
+    network: ropsten
+    source:
+      address: "0x8a0e6dde678762df98346515f5939648635d275e"
+      abi: UniswapPair
+      startBlock: 10284546
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Swap
+      abis:
+        - name: UniswapPair
+          file: ./abis/UniswapPair.json
+      eventHandlers:
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+      file: ./src/mapping-uniswapDeft.ts
+  - kind: ethereum/contract
+    name: UniswapUsdt
+    network: ropsten
+    source:
+      address: "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852"
+      abi: UniswapPair
+      startBlock: 10277151
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+      abis:
+        - name: UniswapPair
+          file: ./abis/UniswapPair.json
+      eventHandlers:
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+      file: ./src/mapping-uniswapUsdt.ts

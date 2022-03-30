@@ -1,0 +1,49 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: NoBotsTech
+    network: binance
+    source:
+      address: "0x77EC5AF6FE83f90daAEb6F8bd2BE3d744813251b"
+      abi: NoBotsTech
+      startBlock: 9364024
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - BotTransaction
+        - Global
+      abis:
+        - name: NoBotsTech
+          file: ./abis/NoBotsTech.json
+      eventHandlers:
+        - event: BotTransactionDetected(address,address,uint256,uint256)
+          handler: handleBotTransactionDetected
+      file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: DefiFactoryToken
+    network: binance
+    source:
+      address: "0xdef1fac7Bf08f173D286BbBDcBeeADe695129840"
+      abi: DefiFactoryToken
+      startBlock: 8818025
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Global
+      abis:
+        - name: DefiFactoryToken
+          file: ./abis/DefiFactoryToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleDefiFactoryTransfer
+        - event: BurnedByBridge(address,uint256)
+          handler: handleBurnedByBridge
+        - event: BurnHumanAddress(address,uint256)
+          handler: handleBurnHumandAddress
+      file: ./src/mapping.ts

@@ -1,0 +1,45 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: UniswapDeft
+    network: mainnet
+    source:
+      address: "0x81489b0e7c7a515799c89374e23ac9295088551d"
+      abi: UniswapV3PoolEvents
+      startBlock: 13424500
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Swap
+      abis:
+        - name: UniswapV3PoolEvents
+          file: ./abis/UniswapV3PoolEvents.json
+      eventHandlers:
+        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
+          handler: handleSwap
+      file: ./src/mapping-uniswapDeft.ts
+  - kind: ethereum/contract
+    name: UniswapUsdt
+    network: mainnet
+    source:
+      address: "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852"
+      abi: UniswapPair
+      startBlock: 13424500
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+      abis:
+        - name: UniswapPair
+          file: ./abis/UniswapPair.json
+      eventHandlers:
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+      file: ./src/mapping-uniswapUsdt.ts

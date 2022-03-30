@@ -1,0 +1,62 @@
+type User @entity {
+  id: ID!
+  stakedAmount: BigDecimal!
+  stakes: [Stake!]! @derivedFrom(field: "owner")
+}
+
+type Global @entity {
+  id: ID!
+  userCount: BigInt!
+  stakeCount: BigInt!
+  stakerCount: BigInt!
+}
+
+type MaxSharePrice @entity {
+  id: ID!
+  sharePrice: BigDecimal!
+}
+
+type DailySnapshot @entity {
+  id: ID! # day
+  sealedDay: BigInt!
+  inflationAmount: BigDecimal!
+  totalShares: BigDecimal!
+  sharePrice: BigDecimal!
+  totalStaked: BigDecimal!
+  totalSupply: BigDecimal!
+}
+
+type CachedInterestPerShare @entity {
+  id: ID! #sealedCachedDay
+  sealedDay: BigInt!
+  sealedCachedDay: BigInt!
+  cachedInterestPerShare: BigDecimal!
+}
+
+type Stake @entity {
+  id: ID!
+  owner: User!
+  stakedAmount: BigDecimal!
+
+  startDay: BigInt!
+  lockDays: BigInt!
+  endDay: BigInt!
+
+  interest: BigDecimal!
+  penalty: BigDecimal!
+
+  sharesCount: BigDecimal!
+
+  startTx: Bytes
+  endTx: Bytes
+
+  startedAt: BigInt
+  completedAt: BigInt
+  canceledAt: BigInt
+
+  timestamp: BigInt!
+  blockNumber: BigInt!
+
+  gasPrice: BigInt!
+  gasUsed: BigInt!
+}

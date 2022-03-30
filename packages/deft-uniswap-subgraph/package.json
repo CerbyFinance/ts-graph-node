@@ -1,0 +1,35 @@
+{
+  "name": "deft-uniswap",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ deft/deft-uniswap-v2",
+    "deploy-remote-fantom": "graph deploy --node http://nodes2.valar-solutions.com:8020/ --ipfs http://nodes2.valar-solutions.com:5001/ cerby/cerby-spookyswap-v2 ./subgraph.fantom.yaml",
+    "create-remote-fantom": "graph create --node http://nodes2.valar-solutions.com:8020/ cerby/cerby-spookyswap-v2",
+    "remove-remote-fantom": "graph remove --node http://nodes2.valar-solutions.com:8020/ cerby/cerby-spookyswap-v2",
+    "deploy-remote-avalanche": "graph deploy --node http://nodes2.valar-solutions.com:8020/ --ipfs http://nodes2.valar-solutions.com:5001/ cerby/cerby-traderjoe-v2 ./subgraph.avalanche.yaml",
+    "create-remote-avalanche": "graph create --node http://nodes2.valar-solutions.com:8020/ cerby/cerby-traderjoe-v2",
+    "remove-remote-avalanche": "graph remove --node http://nodes2.valar-solutions.com:8020/ cerby/cerby-traderjoe-v2",
+    "deploy-remote-binance": "graph deploy --node http://nodes2.valar-solutions.com:8020/ --ipfs http://nodes2.valar-solutions.com:5001/ deft/deft-pancakeswap-v2 ./subgraph.binance.yaml",
+    "create-remote-binance": "graph create --node http://nodes2.valar-solutions.com:8020/ deft/deft-pancakeswap-v2",
+    "remove-remote-binance": "graph remove --node http://nodes2.valar-solutions.com:8020/ deft/deft-pancakeswap-v2",
+    "deploy-remote-polygon": "graph deploy --node http://nodes2.valar-solutions.com:8020/ --ipfs http://nodes2.valar-solutions.com:5001/ deft/deft-quickswap-v2 ./subgraph.polygon.yaml",
+    "create-remote-polygon": "graph create --node http://nodes2.valar-solutions.com:8020/ deft/deft-quickswap-v2",
+    "remove-remote-polygon": "graph remove --node http://nodes2.valar-solutions.com:8020/ deft/deft-quickswap-v2",
+    "deploy-remote-mainnet": "graph deploy --node http://nodes2.valar-solutions.com:8020/ --ipfs http://nodes2.valar-solutions.com:5001/ deft/deft-uniswap-v3 ./subgraph.mainnet.yaml",
+    "create-remote-mainnet": "graph create --node http://nodes2.valar-solutions.com:8020/ deft/deft-uniswap-v3",
+    "remove-remote-mainnet": "graph remove --node http://nodes2.valar-solutions.com:8020/ deft/deft-uniswap-v3",
+    "deploy-remote": "graph deploy --node http://nodes2.valar-solutions.com:8020/ --ipfs http://nodes2.valar-solutions.com:5001/ deft/deft-uniswap-v2-ropsten",
+    "create-remote": "graph create --node http://nodes2.valar-solutions.com:8020/ deft/deft-uniswap-v2-ropsten",
+    "remove-remote": "graph remove --node http://nodes2.valar-solutions.com:8020/ deft/deft-uniswap-v2-ropsten",
+    "create-local": "graph create --node http://localhost:8020/ deft/deft-uniswap-v2",
+    "remove-local": "graph remove --node http://localhost:8020/ deft/deft-uniswap-v2",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 deft/deft-uniswap-v2"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.20.0",
+    "@graphprotocol/graph-ts": "0.20.0"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,16 @@
+{
+  "name": "deft-bot-storage-subgraph",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "create-local": "graph create --node http://localhost:8020/ deft/deft-bot-storage",
+    "remove-local": "graph remove --node http://localhost:8020/ deft/deft-bot-storage",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 deft/deft-bot-storage"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.20.0",
+    "@graphprotocol/graph-ts": "git://github.com/graphprotocol/graph-ts.git#56adb62d9e4233c6fc6c38bc0519a8a566afdd9e"
+  },
+  "devDependencies": {}
+}

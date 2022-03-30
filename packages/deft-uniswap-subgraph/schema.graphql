@@ -1,0 +1,29 @@
+type Swap @entity {
+  # transaction hash + "-" + index in swaps Transaction array
+  id: ID!
+
+  feedType: String!
+  txHash: Bytes!
+  timestamp: BigInt!
+  sender: Bytes!
+  from: Bytes!
+  to: Bytes!
+
+  # deftInEth: BigDecimal!
+  # deftInUsd: BigDecimal!
+
+  amountDeft: BigDecimal!
+  # amountDeftInEth: BigDecimal!
+  amountDeftInUsd: BigDecimal!
+
+  transactionFeeInEth: BigDecimal!
+  # transactionFeeInUsd: BigDecimal!
+
+  logIndex: BigInt!
+  blockNumber: BigInt!
+}
+
+type Token @entity {
+  id: ID!
+  price: BigDecimal!
+}

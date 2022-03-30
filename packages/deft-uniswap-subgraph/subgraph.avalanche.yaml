@@ -1,0 +1,47 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema-avalanche.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: TraderJoeCerby
+    network: avalanche
+    source:
+      address: "0x4e2d00526ae280d5aa296c321a8d32cd2486a737"
+      abi: TraderJoePair
+      startBlock: 7352000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Swap
+      abis:
+        - name: TraderJoePair
+          file: ./abis/TraderJoePair.json
+      eventHandlers:
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+      file: ./src/mapping-traderJoeCerby.ts
+  - kind: ethereum/contract
+    name: TraderJoeUsdc
+    network: avalanche
+    source:
+      address: "0xa389f9430876455c36478deea9769b7ca4e3ddb1"
+      abi: TraderJoePair
+      startBlock: 7352000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+      abis:
+        - name: TraderJoePair
+          file: ./abis/TraderJoePair.json
+      eventHandlers:
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+      file: ./src/mapping-traderJoeUsdc.ts

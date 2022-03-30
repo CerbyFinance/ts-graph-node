@@ -1,0 +1,55 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: NoBotsTech
+    network: kovan
+    source:
+      address: "0x72C2b80c77Cd91C3217D697358A22b8cbA1f3aF5"
+      abi: NoBotsTech
+      startBlock: 24954077
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - BotTransaction
+        - Multiplier
+        - Global
+      abis:
+        - name: NoBotsTech
+          file: ./abis/NoBotsTech.json
+      eventHandlers:
+        - event: MultiplierUpdated(uint256)
+          handler: handleMultiplierUpdated
+        - event: BotTransactionDetected(address,address,uint256,uint256)
+          handler: handleBotTransactionDetected
+        - event: ReferrerRewardUpdated(address,uint256)
+          handler: handleReferrerRewardUpdated
+        - event: ReferralRegistered(address,address)
+          handler: handleReferralRegistered
+        - event: ReferrerReplaced(address,address,address)
+          handler: handleReferrerReplaced
+      file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: DefiFactoryToken
+    network: kovan
+    source:
+      address: "0x5B3828cB72309cB4a695D41f2F82509F28eD6DeD"
+      abi: DefiFactoryToken
+      startBlock: 24954077
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Global
+      abis:
+        - name: DefiFactoryToken
+          file: ./abis/DefiFactoryToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleDefiFactoryTransfer
+      file: ./src/mapping.ts
