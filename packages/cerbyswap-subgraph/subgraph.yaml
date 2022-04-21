@@ -36,6 +36,4 @@ dataSources:
           handler: handleSwap
         - event: Sync(address,uint256,uint256,uint256)
           handler: handleSync
-      blockHandlers:
-        - handler: handleBlock
       file: ./src/mappings/index.ts
