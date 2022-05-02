@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: CerbySwap
-    network: mainnet 
+    network: test2
     source:
       address: "0xfAf360f184788b00623828165405D7F52820D789"
       abi: CerbySwap
@@ -36,4 +36,6 @@ dataSources:
           handler: handleSwap
         - event: Sync(address,uint256,uint256,uint256)
           handler: handleSync
+      blockHandlers:
+        - handler: handleBlock
       file: ./src/mappings/index.ts
