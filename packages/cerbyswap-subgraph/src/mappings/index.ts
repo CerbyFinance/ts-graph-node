@@ -5,5 +5,3 @@ export { LiquidityAdded, LiquidityRemoved } from './liquidity';
 export { handleSwap } from './swap';
 
 export { handleSync } from './sync';
-
-export { handleBlock } from './blocks';
