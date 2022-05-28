@@ -1,6 +1,6 @@
 import { BigInt, BigDecimal } from '@graphprotocol/graph-ts';
 import { Global } from '../../../types/schema';
-import { ZERO_BI, ZERO_BD } from '../../helpers';
+import { ZERO_BI, ZERO_BD, getCerbyPrice, convertTokenToDecimal, BI_18 } from '../../helpers';
 import { hourlyGlobalSnapshot } from './hourly';
 import { dailyGlobalSnapshot } from './daily';
 import { monthlyGlobalSnapshot } from './monthly';
@@ -12,8 +12,9 @@ export function createOrLoadGlobal(): Global {
         global = new Global('1');
         global.totalPools = ZERO_BI;
         global.totalTransactions = ZERO_BI;
-        global.totalVolumeUSD = ZERO_BI;
-        global.totalLiquidityUSD = ZERO_BI;
+        global.totalVolumeUSD = ZERO_BD;
+        global.totalLiquidityCerby = ZERO_BI;
+        global.totalLiquidityUSD = ZERO_BD;
         global.Fees = ZERO_BD;
     }
 
@@ -58,17 +59,24 @@ export function addTransaction(count: i32, blockTimestamp: BigInt): void {
     monthly.save();
 }
 
-export function addVolumeUsd(volume: BigInt, blockTimestamp: BigInt): void {
+export function addVolumeUsd(volume: BigInt, volumeUSD: BigDecimal, blockTimestamp: BigInt): void {
     const global = createOrLoadGlobal(),
           hourly = hourlyGlobalSnapshot(global, blockTimestamp),
           daily = dailyGlobalSnapshot(global, blockTimestamp),
           monthly = monthlyGlobalSnapshot(global, blockTimestamp);
 
-    global.totalVolumeUSD = global.totalVolumeUSD.plus(volume);
 
-    hourly.totalVolumeUSD = hourly.totalVolumeUSD.plus(volume);
-    daily.totalVolumeUSD = daily.totalVolumeUSD.plus(volume);
-    monthly.totalVolumeUSD = monthly.totalVolumeUSD.plus(volume);
+    global.totalVolumeCerby = global.totalVolumeCerby.plus(volume);
+
+    hourly.totalVolumeCerby = hourly.totalVolumeCerby.plus(volume);
+    daily.totalVolumeCerby = daily.totalVolumeCerby.plus(volume);
+    monthly.totalVolumeCerby = monthly.totalVolumeCerby.plus(volume);
+
+    global.totalVolumeUSD = global.totalVolumeUSD.plus(volumeUSD);
+
+    hourly.totalVolumeUSD = hourly.totalVolumeUSD.plus(volumeUSD);
+    daily.totalVolumeUSD = daily.totalVolumeUSD.plus(volumeUSD);
+    monthly.totalVolumeUSD = monthly.totalVolumeUSD.plus(volumeUSD);
 
     global.save();
 
@@ -83,7 +91,18 @@ export function addTVL(volume: BigInt, blockTimestamp: BigInt): void {
           daily = dailyGlobalSnapshot(global, blockTimestamp),
           monthly = monthlyGlobalSnapshot(global, blockTimestamp);
 
-    global.totalLiquidityUSD = global.totalLiquidityUSD.plus(volume);
+    global.totalLiquidityCerby = global.totalLiquidityCerby.plus(volume);
+    const price = getCerbyPrice();
+    if(price) {
+        global.totalLiquidityUSD = convertTokenToDecimal(global.totalLiquidityCerby, BI_18).div(price);
+    } else {
+        global.totalLiquidityUSD = ZERO_BD;
+    }
+
+
+    hourly.totalLiquidityCerby = global.totalLiquidityCerby;
+    daily.totalLiquidityCerby = global.totalLiquidityCerby;
+    monthly.totalLiquidityCerby = global.totalLiquidityCerby;
 
     hourly.totalLiquidityUSD = global.totalLiquidityUSD;
     daily.totalLiquidityUSD = global.totalLiquidityUSD;
@@ -102,7 +121,18 @@ export function removeTVL(volume: BigInt, blockTimestamp: BigInt): void {
           daily = dailyGlobalSnapshot(global, blockTimestamp),
           monthly = monthlyGlobalSnapshot(global, blockTimestamp);
 
-    global.totalLiquidityUSD = global.totalLiquidityUSD.minus(volume);
+    global.totalLiquidityCerby = global.totalLiquidityCerby.minus(volume);
+
+    const price = getCerbyPrice();
+    if(price) {
+        global.totalLiquidityUSD = convertTokenToDecimal(global.totalLiquidityCerby, BI_18).div(price);
+    } else {
+        global.totalLiquidityUSD = ZERO_BD;
+    }
+
+    hourly.totalLiquidityCerby = global.totalLiquidityCerby;
+    daily.totalLiquidityCerby = global.totalLiquidityCerby;
+    monthly.totalLiquidityCerby = global.totalLiquidityCerby;
 
     hourly.totalLiquidityUSD = global.totalLiquidityUSD;
     daily.totalLiquidityUSD = global.totalLiquidityUSD;

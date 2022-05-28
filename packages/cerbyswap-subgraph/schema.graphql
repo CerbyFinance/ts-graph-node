@@ -9,14 +9,16 @@ type Global @entity {
   totalTransactions: BigInt!
 
   # total volume
-  totalVolumeUSD: BigInt!
-  # totalVolumeUSD += for buy Swap.amountCerUsdIn or for sell Swap.amountCerUsdOut
+  totalVolumeCerby: BigInt!
+  totalVolumeUSD: BigDecimal!
+  # totalVolumeUSD += for buy Swap.amountCerbyIn or for sell Swap.amountCerbyOut
 
   # total liquidity
-  totalLiquidityUSD: BigInt!
-  # totalLiquidityUSD += Swap.amountCerUsdIn - Swap.amountCerUsdOut
-  # totalLiquidityUSD += LiquidityAdded.amountCerUsdToMint
-  # totalLiquidityUSD -= LiquidityRemoved.amountCerUsdToBurn
+  totalLiquidityCerby: BigInt!
+  totalLiquidityUSD: BigDecimal!
+  # totalLiquidityUSD += Swap.amountCerbyIn - Swap.amountCerbyOut
+  # totalLiquidityUSD += LiquidityAdded.amountCerbyToMint
+  # totalLiquidityUSD -= LiquidityRemoved.amountCerbyToBurn
 
   Fees: BigDecimal!
   # Fees += swapEvent.currentFee / FEE_DENORM
@@ -38,14 +40,16 @@ type GlobalHourly @entity { # Just a snapshot from global by timestamp
   totalTransactions: BigInt!
 
   # total volume
-  totalVolumeUSD: BigInt!
-  # totalVolumeUSD += for buy Swap.amountCerUsdIn or for sell Swap.amountCerUsdOut
+  totalVolumeCerby: BigInt!
+  totalVolumeUSD: BigDecimal!
+  # totalVolumeUSD += for buy Swap.amountCerbyIn or for sell Swap.amountCerbyOut
 
   # total liquidity
-  totalLiquidityUSD: BigInt!
-  # totalLiquidityUSD += Swap.amountCerUsdIn - Swap.amountCerUsdOut
-  # totalLiquidityUSD += LiquidityAdded.amountCerUsdToMint
-  # totalLiquidityUSD -= LiquidityRemoved.amountCerUsdToBurn
+  totalLiquidityCerby: BigInt!
+  totalLiquidityUSD: BigDecimal!
+  # totalLiquidityUSD += Swap.amountCerbyIn - Swap.amountCerbyOut
+  # totalLiquidityUSD += LiquidityAdded.amountCerbyToMint
+  # totalLiquidityUSD -= LiquidityRemoved.amountCerbyToBurn
 
   Fees: BigDecimal!
   # Fees += swapEvent.currentFee / FEE_DENORM
@@ -65,14 +69,16 @@ type GlobalDaily @entity { # Just a snapshot from global by timestamp
   totalTransactions: BigInt!
 
   # total volume
-  totalVolumeUSD: BigInt!
-  # totalVolumeUSD += for buy Swap.amountCerUsdIn or for sell Swap.amountCerUsdOut
+  totalVolumeCerby: BigInt!
+  totalVolumeUSD: BigDecimal!
+  # totalVolumeUSD += for buy Swap.amountCerbyIn or for sell Swap.amountCerbyOut
 
   # total liquidity
-  totalLiquidityUSD: BigInt!
-  # totalLiquidityUSD += Swap.amountCerUsdIn - Swap.amountCerUsdOut
-  # totalLiquidityUSD += LiquidityAdded.amountCerUsdToMint
-  # totalLiquidityUSD -= LiquidityRemoved.amountCerUsdToBurn
+  totalLiquidityCerby: BigInt!
+  totalLiquidityUSD: BigDecimal!
+  # totalLiquidityUSD += Swap.amountCerbyIn - Swap.amountCerbyOut
+  # totalLiquidityUSD += LiquidityAdded.amountCerbyToMint
+  # totalLiquidityUSD -= LiquidityRemoved.amountCerbyToBurn
 
   Fees: BigDecimal!
   # Fees += swapEvent.currentFee / FEE_DENORM
@@ -92,10 +98,12 @@ type GlobalMonthly @entity { # Just a snapshot from global by timestamp
   totalTransactions: BigInt!
 
   # total volume
-  totalVolumeUSD: BigInt!
+  totalVolumeCerby: BigInt!
+  totalVolumeUSD: BigDecimal!
 
   # total liquidity
-  totalLiquidityUSD: BigInt!
+  totalLiquidityCerby: BigInt!
+  totalLiquidityUSD: BigDecimal!
 
   Fees: BigDecimal!
 
@@ -112,7 +120,7 @@ type Swap @entity {
   id: ID!
 
   feedType: String!
-  # if amountCerUsdIn != 0: Buy
+  # if amountCerbyIn != 0: Buy
   # else Sell
 
   token: Pool!
@@ -121,9 +129,12 @@ type Swap @entity {
   to: Bytes!
 
   price: BigDecimal!
+  priceUSD: BigDecimal!
 
-  amountTokensIn: BigInt! # FeedType == buy: amountCerUsd else amountTokens
-  amountTokensOut: BigInt! # FeedType == sell: amountCerUsd else amountTokens
+  amountTokensIn: BigInt! # FeedType == buy: amountCerby else amountTokens
+  amountTokensOut: BigInt! # FeedType == sell: amountCerby else amountTokens
+
+  amountUSD: BigDecimal!
 
   amountFeesCollected: BigInt!
   # (swapEvent.amountTokensIn * swapEvent.currentFee) / FEE_DENORM
@@ -144,7 +155,8 @@ type liqudityEvent @entity {
   feedType: String! # add/remove
 
   amountTokens: BigInt! # add - amountTokensIn, remove - amountTokensOut
-  amountCerUsd: BigInt! # add - amountCerUsdToMint, remove - amountCerUsdToBurn
+  amountCerby: BigInt! # add - amountCerbyToMint, remove - amountCerbyToBurn
+  amountUSD: BigDecimal!
 
   amountLpTokensBalanceToBurn: BigInt!
 
@@ -197,26 +209,27 @@ type Pool @entity {
   # removed
   # balanceToken -= amountTokensOut
 
-  balanceCerUsd: BigInt!
+  balanceCerby: BigInt!
   # Event swap
-  # balanceCerUsd = balanceCerUsd + swap.amountCerUsdIn - swap.amountCerUsdOut
+  # balanceCerby = balanceCerby + swap.amountCerbyIn - swap.amountCerbyOut
 
   # Event liqudity
   # add
-  # balanceCerUsd += amountCerUsdToMint
+  # balanceCerby += amountCerbyToMint
   # removed
-  # balanceCerUsd -= liqudityEvent.amountCerUsdToBurn
+  # balanceCerby -= liqudityEvent.amountCerbyToBurn
 
-  CreditCerUsd: BigInt!
-  # if swap.feedType == buy: CreditCerUsd += swap.amountCerUsdIn
-  # else: CreditCerUsd -= swap.amountCerUsdOut
+  CreditCerby: BigInt!
+  # if swap.feedType == buy: CreditCerby += swap.amountCerbyIn
+  # else: CreditCerby -= swap.amountCerbyOut
 
   price: BigDecimal!
-  # balanceToken / balanceCerUsd
+  priceUSD: BigDecimal!
+  # balanceToken / balanceCerby
 
   # mirrored from the smart contract
-  symbol: String
-  name: String
+  symbol: String!
+  name: String!
   decimals: Int!
 
 
@@ -239,13 +252,14 @@ type poolHourly @entity {
 
   volumeToken: BigInt!
   # swap.amountTokensIn + swap.amountTokensOut
-  volumeUSD: BigInt!
-  # swap.amountCerUsdIn + swap.amountCerUsdOut
+  volumeCerby: BigInt!
+  volumeUSD: BigDecimal!
+  # swap.amountCerbyIn + swap.amountCerbyOut
 
   # mirrored from Pool by current time
   balanceToken: BigInt!
-  balanceCerUsd: BigInt!
-  CreditCerUsd: BigInt!
+  balanceCerby: BigInt!
+  CreditCerby: BigInt!
 
   amountFeesCollected: BigInt!
   # amountFeesCollected += swap.amountFeesCollected 
@@ -253,16 +267,23 @@ type poolHourly @entity {
   # APR = (amountFeesCollected * period(365 days)) / (pool.balanceToken * periodInSeconds(fromTimestamp, toTimestamp))
 
   priceChangePercent: BigDecimal!
+  priceUSDChangePercent: BigDecimal!
   # priceChangePercent = (previous.price - price) / previousDaily.price;
 
   previous: poolHourly!
 
   price: BigDecimal!
+  priceUSD: BigDecimal!
 
   open: BigDecimal!
   high: BigDecimal!
   low: BigDecimal!
   close: BigDecimal!
+
+  openUSD: BigDecimal!
+  highUSD: BigDecimal!
+  lowUSD: BigDecimal!
+  closeUSD: BigDecimal!
 }
 
 type poolDaily @entity {
@@ -273,26 +294,35 @@ type poolDaily @entity {
   token: Pool!
 
   volumeToken: BigInt!
-  volumeUSD: BigInt!
+  volumeCerby: BigInt!
+  volumeUSD: BigDecimal!
 
   # mirrored from Pool by current time
   balanceToken: BigInt!
-  balanceCerUsd: BigInt!
-  CreditCerUsd: BigInt!
+  balanceCerby: BigInt!
+  CreditCerby: BigInt!
 
   amountFeesCollected: BigInt!
   APR: BigDecimal!
 
   priceChangePercent: BigDecimal!
+  priceUSDChangePercent: BigDecimal!
 
   previous: poolDaily!
 
   price: BigDecimal!
+  priceUSD: BigDecimal!
 
   open: BigDecimal!
   high: BigDecimal!
   low: BigDecimal!
   close: BigDecimal!
+
+
+  openUSD: BigDecimal!
+  highUSD: BigDecimal!
+  lowUSD: BigDecimal!
+  closeUSD: BigDecimal!
 }
 
 type poolMonthly @entity {
@@ -303,30 +333,43 @@ type poolMonthly @entity {
   token: Pool!
 
   volumeToken: BigInt!
-  volumeUSD: BigInt!
+  volumeCerby: BigInt!
+  volumeUSD: BigDecimal!
 
   # mirrored from Pool by current time
   balanceToken: BigInt!
-  balanceCerUsd: BigInt!
-  CreditCerUsd: BigInt!
+  balanceCerby: BigInt!
+  CreditCerby: BigInt!
 
   amountFeesCollected: BigInt!
   APR: BigDecimal!
 
   priceChangePercent: BigDecimal!
+  priceUSDChangePercent: BigDecimal!
 
   previous: poolMonthly!
 
   price: BigDecimal!
+  priceUSD: BigDecimal!
 
   open: BigDecimal!
   high: BigDecimal!
   low: BigDecimal!
   close: BigDecimal!
+
+  openUSD: BigDecimal!
+  highUSD: BigDecimal!
+  lowUSD: BigDecimal!
+  closeUSD: BigDecimal!
 }
 
 type Block @entity {
   id: ID!
   number: BigInt!
   timestamp: BigInt!
+}
+
+type CerbyToken @entity {
+  id: ID!,
+  stablePool: Pool!
 }

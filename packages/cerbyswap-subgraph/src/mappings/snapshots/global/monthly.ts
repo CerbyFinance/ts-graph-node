@@ -14,12 +14,14 @@ export function monthlyGlobalSnapshot(GlobalObj: Global, blockTimestamp: BigInt)
       globalMonthData = new GlobalMonthly(globalMonthID)
       globalMonthData.startUnix = monthStartTimestamp;
       globalMonthData.totalTransactions = ZERO_BI;
-      globalMonthData.totalVolumeUSD = ZERO_BI;
+      globalMonthData.totalVolumeCerby = ZERO_BI;
+      globalMonthData.totalVolumeUSD = ZERO_BD;
       globalMonthData.Fees = ZERO_BD;
 
       if(GlobalObj) {
         globalMonthData.totalPools = GlobalObj.totalPools;
         globalMonthData.totalLiquidityUSD = GlobalObj.totalLiquidityUSD;
+        globalMonthData.totalLiquidityCerby = GlobalObj.totalLiquidityCerby;
         if(!GlobalObj.latestMonthlies) {
             globalMonthData.previous = GlobalObj.latestMonthlies;
         } else {

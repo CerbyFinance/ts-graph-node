@@ -14,11 +14,13 @@ export function hourlyGlobalSnapshot(GlobalObj: Global, blockTimestamp: BigInt):
       globalHourData = new GlobalHourly(globalHourID)
       globalHourData.startUnix = hourStartTimestamp;
       globalHourData.totalTransactions = ZERO_BI;
-      globalHourData.totalVolumeUSD = ZERO_BI;
+      globalHourData.totalVolumeCerby = ZERO_BI;
+      globalHourData.totalVolumeUSD = ZERO_BD;
       globalHourData.Fees = ZERO_BD;
 
       if(GlobalObj) {
         globalHourData.totalPools = GlobalObj.totalPools;
+        globalHourData.totalLiquidityCerby = GlobalObj.totalLiquidityCerby;
         globalHourData.totalLiquidityUSD = GlobalObj.totalLiquidityUSD;
         if(!GlobalObj.latestHourlies) {
             globalHourData.previous = GlobalObj.latestHourlies;

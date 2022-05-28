@@ -23,12 +23,14 @@ import { monthlySnapshot } from "./monthly";
 export function createPoolSnapshot(
         Token: Address,
         price: BigDecimal,
+        priceUSD: BigDecimal | null,
         blockTimestamp: BigInt,
         liqudityCerUsd: BigInt,
         liqudityToken: BigInt,
-        tradeCerUsd: BigInt,
+        tradeCerby: BigInt,
         tradeToken: BigInt,
-        amountFeesCollected: BigInt): void {
+        amountFeesCollected: BigInt,
+        tradeUSD: BigDecimal): void {
 
     const pool = Pool.load(Token.toHexString());
     if(!pool) {
@@ -39,31 +41,34 @@ export function createPoolSnapshot(
           monthly = monthlySnapshot(pool, Token, blockTimestamp);
 
 
-    daily.balanceCerUsd = pool.balanceCerUsd;
+    daily.balanceCerby = pool.balanceCerby;
     daily.balanceToken = pool.balanceToken;
 
-    hourly.balanceCerUsd = pool.balanceCerUsd;
+    hourly.balanceCerby = pool.balanceCerby;
     hourly.balanceToken = pool.balanceToken;
 
-    monthly.balanceCerUsd = pool.balanceCerUsd;
+    monthly.balanceCerby = pool.balanceCerby;
     monthly.balanceToken = pool.balanceToken;
 
 
-    if(tradeCerUsd.notEqual(ZERO_BI)) {
-        addVolumeUsd(tradeCerUsd, blockTimestamp);
-        daily.volumeUSD = daily.volumeUSD.plus(tradeCerUsd);
+    if(tradeCerby.notEqual(ZERO_BI)) {
+        addVolumeUsd(tradeCerby, tradeUSD, blockTimestamp);
+        daily.volumeCerby = daily.volumeCerby.plus(tradeCerby);
+        daily.volumeUSD = daily.volumeUSD.plus(tradeUSD);
         daily.volumeToken = daily.volumeToken.plus(tradeToken);
         daily.amountFeesCollected = daily.amountFeesCollected.plus(amountFeesCollected);
         daily.APR = (daily.amountFeesCollected.times(BigInt.fromI32(365))).divDecimal(daily.balanceToken.times(BigInt.fromI32(1)).toBigDecimal())
 
 
-        hourly.volumeUSD = hourly.volumeUSD.plus(tradeCerUsd);
+        hourly.volumeCerby = hourly.volumeCerby.plus(tradeCerby);
+        hourly.volumeUSD = hourly.volumeUSD.plus(tradeUSD);
         hourly.volumeToken = hourly.volumeToken.plus(tradeToken);
         hourly.amountFeesCollected = hourly.amountFeesCollected.plus(amountFeesCollected);
         hourly.APR = (hourly.amountFeesCollected.times(BigInt.fromI32(8760))).divDecimal(hourly.balanceToken.times(BigInt.fromI32(1)).toBigDecimal())
 
 
-        monthly.volumeUSD = monthly.volumeUSD.plus(tradeCerUsd);
+        monthly.volumeCerby = monthly.volumeCerby.plus(tradeCerby);
+        monthly.volumeUSD = monthly.volumeUSD.plus(tradeUSD);
         monthly.volumeToken = monthly.volumeToken.plus(tradeToken);
         monthly.amountFeesCollected = monthly.amountFeesCollected.plus(amountFeesCollected);
         monthly.APR = (monthly.amountFeesCollected.times(BigInt.fromI32(8760))).divDecimal(monthly.balanceToken.times(BigInt.fromI32(1)).toBigDecimal())
@@ -71,6 +76,7 @@ export function createPoolSnapshot(
 
     if(price) {
         daily.price = price;
+        // daily.price
         if(daily.high.lt(price)) {
             daily.high = price;
         }
@@ -97,7 +103,7 @@ export function createPoolSnapshot(
         if(hourly.previous != hourly.id) {
             let previousHourly = poolHourly.load(hourly.previous)!;
             if(previousHourly) {
-                hourly.priceChangePercent = (price.minus(previousHourly.price)).div(previousHourly.price);
+                hourly.priceChangePercent = (price.minus(previousHourly.price)).div(previousHourly.price).times(BigDecimal.fromString("100"));
             }
         } else {
             hourly.priceChangePercent = ZERO_BD;
@@ -113,10 +119,63 @@ export function createPoolSnapshot(
         if(monthly.previous != monthly.id) {
             let previousMonthly = poolMonthly.load(monthly.previous)!;
             if(previousMonthly) {
-                monthly.priceChangePercent = (price.minus(previousMonthly.price)).div(previousMonthly.price);
+                monthly.priceChangePercent = (price.minus(previousMonthly.price)).div(previousMonthly.price).times(BigDecimal.fromString("100"));
             }
         } else {
             monthly.priceChangePercent = ZERO_BD;
+        }
+    }
+
+
+    if(priceUSD) {
+        daily.priceUSD = priceUSD;
+        // daily.price
+        if(daily.highUSD.lt(priceUSD)) {
+            daily.highUSD = priceUSD;
+        }
+        if(daily.lowUSD.gt(priceUSD)) {
+            daily.lowUSD = priceUSD;
+        }
+        if(daily.previous != daily.id) {
+            let previousDaily = poolDaily.load(daily.previous);
+            // priceChangePercent = (price(now) - price(period ago)) / price(period ago) = +-11.23456
+            if(previousDaily) {
+                daily.priceUSDChangePercent = (priceUSD.minus(previousDaily.priceUSD)).div(previousDaily.priceUSD).times(BigDecimal.fromString("100"));
+            }
+        } else {
+            daily.priceUSDChangePercent = ZERO_BD;
+        }
+
+        hourly.priceUSD = priceUSD;
+        if(hourly.highUSD.lt(priceUSD)) {
+            hourly.highUSD = priceUSD;
+        }
+        if(hourly.lowUSD.gt(priceUSD)) {
+            hourly.lowUSD = priceUSD;
+        }
+        if(hourly.previous != hourly.id) {
+            let previousHourly = poolHourly.load(hourly.previous)!;
+            if(previousHourly) {
+                hourly.priceUSDChangePercent = (priceUSD.minus(previousHourly.priceUSD)).div(previousHourly.priceUSD).times(BigDecimal.fromString("100"));
+            }
+        } else {
+            hourly.priceUSDChangePercent = ZERO_BD;
+        }
+
+        monthly.priceUSD = priceUSD;
+        if(monthly.highUSD.lt(priceUSD)) {
+            monthly.highUSD = priceUSD;
+        }
+        if(monthly.lowUSD.gt(priceUSD)) {
+            monthly.lowUSD = priceUSD;
+        }
+        if(monthly.previous != monthly.id) {
+            let previousMonthly = poolMonthly.load(monthly.previous)!;
+            if(previousMonthly) {
+                monthly.priceUSDChangePercent = (priceUSD.minus(previousMonthly.priceUSD)).div(previousMonthly.priceUSD).times(BigDecimal.fromString("100"));
+            }
+        } else {
+            monthly.priceUSDChangePercent = ZERO_BD;
         }
     }
 

@@ -18,8 +18,10 @@ export class Global extends Entity {
 
     this.set("totalPools", Value.fromBigInt(BigInt.zero()));
     this.set("totalTransactions", Value.fromBigInt(BigInt.zero()));
-    this.set("totalVolumeUSD", Value.fromBigInt(BigInt.zero()));
-    this.set("totalLiquidityUSD", Value.fromBigInt(BigInt.zero()));
+    this.set("totalVolumeCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("totalVolumeUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("totalLiquidityCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("totalLiquidityUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("Fees", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("latestHourlies", Value.fromString(""));
     this.set("latestDailies", Value.fromString(""));
@@ -70,22 +72,40 @@ export class Global extends Entity {
     this.set("totalTransactions", Value.fromBigInt(value));
   }
 
-  get totalVolumeUSD(): BigInt {
+  get totalVolumeCerby(): BigInt {
+    let value = this.get("totalVolumeCerby");
+    return value!.toBigInt();
+  }
+
+  set totalVolumeCerby(value: BigInt) {
+    this.set("totalVolumeCerby", Value.fromBigInt(value));
+  }
+
+  get totalVolumeUSD(): BigDecimal {
     let value = this.get("totalVolumeUSD");
+    return value!.toBigDecimal();
+  }
+
+  set totalVolumeUSD(value: BigDecimal) {
+    this.set("totalVolumeUSD", Value.fromBigDecimal(value));
+  }
+
+  get totalLiquidityCerby(): BigInt {
+    let value = this.get("totalLiquidityCerby");
     return value!.toBigInt();
   }
 
-  set totalVolumeUSD(value: BigInt) {
-    this.set("totalVolumeUSD", Value.fromBigInt(value));
+  set totalLiquidityCerby(value: BigInt) {
+    this.set("totalLiquidityCerby", Value.fromBigInt(value));
   }
 
-  get totalLiquidityUSD(): BigInt {
+  get totalLiquidityUSD(): BigDecimal {
     let value = this.get("totalLiquidityUSD");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set totalLiquidityUSD(value: BigInt) {
-    this.set("totalLiquidityUSD", Value.fromBigInt(value));
+  set totalLiquidityUSD(value: BigDecimal) {
+    this.set("totalLiquidityUSD", Value.fromBigDecimal(value));
   }
 
   get Fees(): BigDecimal {
@@ -133,8 +153,10 @@ export class GlobalHourly extends Entity {
     this.set("startUnix", Value.fromI32(0));
     this.set("totalPools", Value.fromBigInt(BigInt.zero()));
     this.set("totalTransactions", Value.fromBigInt(BigInt.zero()));
-    this.set("totalVolumeUSD", Value.fromBigInt(BigInt.zero()));
-    this.set("totalLiquidityUSD", Value.fromBigInt(BigInt.zero()));
+    this.set("totalVolumeCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("totalVolumeUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("totalLiquidityCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("totalLiquidityUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("Fees", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("previous", Value.fromString(""));
   }
@@ -192,22 +214,40 @@ export class GlobalHourly extends Entity {
     this.set("totalTransactions", Value.fromBigInt(value));
   }
 
-  get totalVolumeUSD(): BigInt {
+  get totalVolumeCerby(): BigInt {
+    let value = this.get("totalVolumeCerby");
+    return value!.toBigInt();
+  }
+
+  set totalVolumeCerby(value: BigInt) {
+    this.set("totalVolumeCerby", Value.fromBigInt(value));
+  }
+
+  get totalVolumeUSD(): BigDecimal {
     let value = this.get("totalVolumeUSD");
+    return value!.toBigDecimal();
+  }
+
+  set totalVolumeUSD(value: BigDecimal) {
+    this.set("totalVolumeUSD", Value.fromBigDecimal(value));
+  }
+
+  get totalLiquidityCerby(): BigInt {
+    let value = this.get("totalLiquidityCerby");
     return value!.toBigInt();
   }
 
-  set totalVolumeUSD(value: BigInt) {
-    this.set("totalVolumeUSD", Value.fromBigInt(value));
+  set totalLiquidityCerby(value: BigInt) {
+    this.set("totalLiquidityCerby", Value.fromBigInt(value));
   }
 
-  get totalLiquidityUSD(): BigInt {
+  get totalLiquidityUSD(): BigDecimal {
     let value = this.get("totalLiquidityUSD");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set totalLiquidityUSD(value: BigInt) {
-    this.set("totalLiquidityUSD", Value.fromBigInt(value));
+  set totalLiquidityUSD(value: BigDecimal) {
+    this.set("totalLiquidityUSD", Value.fromBigDecimal(value));
   }
 
   get Fees(): BigDecimal {
@@ -237,8 +277,10 @@ export class GlobalDaily extends Entity {
     this.set("startUnix", Value.fromI32(0));
     this.set("totalPools", Value.fromBigInt(BigInt.zero()));
     this.set("totalTransactions", Value.fromBigInt(BigInt.zero()));
-    this.set("totalVolumeUSD", Value.fromBigInt(BigInt.zero()));
-    this.set("totalLiquidityUSD", Value.fromBigInt(BigInt.zero()));
+    this.set("totalVolumeCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("totalVolumeUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("totalLiquidityCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("totalLiquidityUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("Fees", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("previous", Value.fromString(""));
   }
@@ -296,22 +338,40 @@ export class GlobalDaily extends Entity {
     this.set("totalTransactions", Value.fromBigInt(value));
   }
 
-  get totalVolumeUSD(): BigInt {
+  get totalVolumeCerby(): BigInt {
+    let value = this.get("totalVolumeCerby");
+    return value!.toBigInt();
+  }
+
+  set totalVolumeCerby(value: BigInt) {
+    this.set("totalVolumeCerby", Value.fromBigInt(value));
+  }
+
+  get totalVolumeUSD(): BigDecimal {
     let value = this.get("totalVolumeUSD");
+    return value!.toBigDecimal();
+  }
+
+  set totalVolumeUSD(value: BigDecimal) {
+    this.set("totalVolumeUSD", Value.fromBigDecimal(value));
+  }
+
+  get totalLiquidityCerby(): BigInt {
+    let value = this.get("totalLiquidityCerby");
     return value!.toBigInt();
   }
 
-  set totalVolumeUSD(value: BigInt) {
-    this.set("totalVolumeUSD", Value.fromBigInt(value));
+  set totalLiquidityCerby(value: BigInt) {
+    this.set("totalLiquidityCerby", Value.fromBigInt(value));
   }
 
-  get totalLiquidityUSD(): BigInt {
+  get totalLiquidityUSD(): BigDecimal {
     let value = this.get("totalLiquidityUSD");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set totalLiquidityUSD(value: BigInt) {
-    this.set("totalLiquidityUSD", Value.fromBigInt(value));
+  set totalLiquidityUSD(value: BigDecimal) {
+    this.set("totalLiquidityUSD", Value.fromBigDecimal(value));
   }
 
   get Fees(): BigDecimal {
@@ -341,8 +401,10 @@ export class GlobalMonthly extends Entity {
     this.set("startUnix", Value.fromI32(0));
     this.set("totalPools", Value.fromBigInt(BigInt.zero()));
     this.set("totalTransactions", Value.fromBigInt(BigInt.zero()));
-    this.set("totalVolumeUSD", Value.fromBigInt(BigInt.zero()));
-    this.set("totalLiquidityUSD", Value.fromBigInt(BigInt.zero()));
+    this.set("totalVolumeCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("totalVolumeUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("totalLiquidityCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("totalLiquidityUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("Fees", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("previous", Value.fromString(""));
   }
@@ -400,22 +462,40 @@ export class GlobalMonthly extends Entity {
     this.set("totalTransactions", Value.fromBigInt(value));
   }
 
-  get totalVolumeUSD(): BigInt {
+  get totalVolumeCerby(): BigInt {
+    let value = this.get("totalVolumeCerby");
+    return value!.toBigInt();
+  }
+
+  set totalVolumeCerby(value: BigInt) {
+    this.set("totalVolumeCerby", Value.fromBigInt(value));
+  }
+
+  get totalVolumeUSD(): BigDecimal {
     let value = this.get("totalVolumeUSD");
+    return value!.toBigDecimal();
+  }
+
+  set totalVolumeUSD(value: BigDecimal) {
+    this.set("totalVolumeUSD", Value.fromBigDecimal(value));
+  }
+
+  get totalLiquidityCerby(): BigInt {
+    let value = this.get("totalLiquidityCerby");
     return value!.toBigInt();
   }
 
-  set totalVolumeUSD(value: BigInt) {
-    this.set("totalVolumeUSD", Value.fromBigInt(value));
+  set totalLiquidityCerby(value: BigInt) {
+    this.set("totalLiquidityCerby", Value.fromBigInt(value));
   }
 
-  get totalLiquidityUSD(): BigInt {
+  get totalLiquidityUSD(): BigDecimal {
     let value = this.get("totalLiquidityUSD");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set totalLiquidityUSD(value: BigInt) {
-    this.set("totalLiquidityUSD", Value.fromBigInt(value));
+  set totalLiquidityUSD(value: BigDecimal) {
+    this.set("totalLiquidityUSD", Value.fromBigDecimal(value));
   }
 
   get Fees(): BigDecimal {
@@ -447,8 +527,10 @@ export class Swap extends Entity {
     this.set("sender", Value.fromBytes(Bytes.empty()));
     this.set("to", Value.fromBytes(Bytes.empty()));
     this.set("price", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("priceUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("amountTokensIn", Value.fromBigInt(BigInt.zero()));
     this.set("amountTokensOut", Value.fromBigInt(BigInt.zero()));
+    this.set("amountUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("amountFeesCollected", Value.fromBigInt(BigInt.zero()));
     this.set("currentFee", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("transaction", Value.fromString(""));
@@ -526,6 +608,15 @@ export class Swap extends Entity {
     this.set("price", Value.fromBigDecimal(value));
   }
 
+  get priceUSD(): BigDecimal {
+    let value = this.get("priceUSD");
+    return value!.toBigDecimal();
+  }
+
+  set priceUSD(value: BigDecimal) {
+    this.set("priceUSD", Value.fromBigDecimal(value));
+  }
+
   get amountTokensIn(): BigInt {
     let value = this.get("amountTokensIn");
     return value!.toBigInt();
@@ -542,6 +633,15 @@ export class Swap extends Entity {
 
   set amountTokensOut(value: BigInt) {
     this.set("amountTokensOut", Value.fromBigInt(value));
+  }
+
+  get amountUSD(): BigDecimal {
+    let value = this.get("amountUSD");
+    return value!.toBigDecimal();
+  }
+
+  set amountUSD(value: BigDecimal) {
+    this.set("amountUSD", Value.fromBigDecimal(value));
   }
 
   get amountFeesCollected(): BigInt {
@@ -589,7 +689,8 @@ export class liqudityEvent extends Entity {
     this.set("token", Value.fromString(""));
     this.set("feedType", Value.fromString(""));
     this.set("amountTokens", Value.fromBigInt(BigInt.zero()));
-    this.set("amountCerUsd", Value.fromBigInt(BigInt.zero()));
+    this.set("amountCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("amountUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("amountLpTokensBalanceToBurn", Value.fromBigInt(BigInt.zero()));
     this.set("transaction", Value.fromString(""));
     this.set("logIndex", Value.fromBigInt(BigInt.zero()));
@@ -648,13 +749,22 @@ export class liqudityEvent extends Entity {
     this.set("amountTokens", Value.fromBigInt(value));
   }
 
-  get amountCerUsd(): BigInt {
-    let value = this.get("amountCerUsd");
+  get amountCerby(): BigInt {
+    let value = this.get("amountCerby");
     return value!.toBigInt();
   }
 
-  set amountCerUsd(value: BigInt) {
-    this.set("amountCerUsd", Value.fromBigInt(value));
+  set amountCerby(value: BigInt) {
+    this.set("amountCerby", Value.fromBigInt(value));
+  }
+
+  get amountUSD(): BigDecimal {
+    let value = this.get("amountUSD");
+    return value!.toBigDecimal();
+  }
+
+  set amountUSD(value: BigDecimal) {
+    this.set("amountUSD", Value.fromBigDecimal(value));
   }
 
   get amountLpTokensBalanceToBurn(): BigInt {
@@ -893,9 +1003,12 @@ export class Pool extends Entity {
     this.set("token", Value.fromBytes(Bytes.empty()));
     this.set("vaultAddress", Value.fromBytes(Bytes.empty()));
     this.set("balanceToken", Value.fromBigInt(BigInt.zero()));
-    this.set("balanceCerUsd", Value.fromBigInt(BigInt.zero()));
-    this.set("CreditCerUsd", Value.fromBigInt(BigInt.zero()));
+    this.set("balanceCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("CreditCerby", Value.fromBigInt(BigInt.zero()));
     this.set("price", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("priceUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("symbol", Value.fromString(""));
+    this.set("name", Value.fromString(""));
     this.set("decimals", Value.fromI32(0));
     this.set("latestDailies", Value.fromString(""));
     this.set("latestHourlies", Value.fromString(""));
@@ -965,22 +1078,22 @@ export class Pool extends Entity {
     this.set("balanceToken", Value.fromBigInt(value));
   }
 
-  get balanceCerUsd(): BigInt {
-    let value = this.get("balanceCerUsd");
+  get balanceCerby(): BigInt {
+    let value = this.get("balanceCerby");
     return value!.toBigInt();
   }
 
-  set balanceCerUsd(value: BigInt) {
-    this.set("balanceCerUsd", Value.fromBigInt(value));
+  set balanceCerby(value: BigInt) {
+    this.set("balanceCerby", Value.fromBigInt(value));
   }
 
-  get CreditCerUsd(): BigInt {
-    let value = this.get("CreditCerUsd");
+  get CreditCerby(): BigInt {
+    let value = this.get("CreditCerby");
     return value!.toBigInt();
   }
 
-  set CreditCerUsd(value: BigInt) {
-    this.set("CreditCerUsd", Value.fromBigInt(value));
+  set CreditCerby(value: BigInt) {
+    this.set("CreditCerby", Value.fromBigInt(value));
   }
 
   get price(): BigDecimal {
@@ -992,38 +1105,31 @@ export class Pool extends Entity {
     this.set("price", Value.fromBigDecimal(value));
   }
 
-  get symbol(): string | null {
+  get priceUSD(): BigDecimal {
+    let value = this.get("priceUSD");
+    return value!.toBigDecimal();
+  }
+
+  set priceUSD(value: BigDecimal) {
+    this.set("priceUSD", Value.fromBigDecimal(value));
+  }
+
+  get symbol(): string {
     let value = this.get("symbol");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
+    return value!.toString();
   }
 
-  set symbol(value: string | null) {
-    if (!value) {
-      this.unset("symbol");
-    } else {
-      this.set("symbol", Value.fromString(<string>value));
-    }
+  set symbol(value: string) {
+    this.set("symbol", Value.fromString(value));
   }
 
-  get name(): string | null {
+  get name(): string {
     let value = this.get("name");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
+    return value!.toString();
   }
 
-  set name(value: string | null) {
-    if (!value) {
-      this.unset("name");
-    } else {
-      this.set("name", Value.fromString(<string>value));
-    }
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
   }
 
   get decimals(): i32 {
@@ -1097,19 +1203,26 @@ export class poolHourly extends Entity {
     this.set("startUnix", Value.fromI32(0));
     this.set("token", Value.fromString(""));
     this.set("volumeToken", Value.fromBigInt(BigInt.zero()));
-    this.set("volumeUSD", Value.fromBigInt(BigInt.zero()));
+    this.set("volumeCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("volumeUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("balanceToken", Value.fromBigInt(BigInt.zero()));
-    this.set("balanceCerUsd", Value.fromBigInt(BigInt.zero()));
-    this.set("CreditCerUsd", Value.fromBigInt(BigInt.zero()));
+    this.set("balanceCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("CreditCerby", Value.fromBigInt(BigInt.zero()));
     this.set("amountFeesCollected", Value.fromBigInt(BigInt.zero()));
     this.set("APR", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("priceChangePercent", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("priceUSDChangePercent", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("previous", Value.fromString(""));
     this.set("price", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("priceUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("open", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("high", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("low", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("close", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("openUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("highUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("lowUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("closeUSD", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -1165,13 +1278,22 @@ export class poolHourly extends Entity {
     this.set("volumeToken", Value.fromBigInt(value));
   }
 
-  get volumeUSD(): BigInt {
-    let value = this.get("volumeUSD");
+  get volumeCerby(): BigInt {
+    let value = this.get("volumeCerby");
     return value!.toBigInt();
   }
 
-  set volumeUSD(value: BigInt) {
-    this.set("volumeUSD", Value.fromBigInt(value));
+  set volumeCerby(value: BigInt) {
+    this.set("volumeCerby", Value.fromBigInt(value));
+  }
+
+  get volumeUSD(): BigDecimal {
+    let value = this.get("volumeUSD");
+    return value!.toBigDecimal();
+  }
+
+  set volumeUSD(value: BigDecimal) {
+    this.set("volumeUSD", Value.fromBigDecimal(value));
   }
 
   get balanceToken(): BigInt {
@@ -1183,22 +1305,22 @@ export class poolHourly extends Entity {
     this.set("balanceToken", Value.fromBigInt(value));
   }
 
-  get balanceCerUsd(): BigInt {
-    let value = this.get("balanceCerUsd");
+  get balanceCerby(): BigInt {
+    let value = this.get("balanceCerby");
     return value!.toBigInt();
   }
 
-  set balanceCerUsd(value: BigInt) {
-    this.set("balanceCerUsd", Value.fromBigInt(value));
+  set balanceCerby(value: BigInt) {
+    this.set("balanceCerby", Value.fromBigInt(value));
   }
 
-  get CreditCerUsd(): BigInt {
-    let value = this.get("CreditCerUsd");
+  get CreditCerby(): BigInt {
+    let value = this.get("CreditCerby");
     return value!.toBigInt();
   }
 
-  set CreditCerUsd(value: BigInt) {
-    this.set("CreditCerUsd", Value.fromBigInt(value));
+  set CreditCerby(value: BigInt) {
+    this.set("CreditCerby", Value.fromBigInt(value));
   }
 
   get amountFeesCollected(): BigInt {
@@ -1228,6 +1350,15 @@ export class poolHourly extends Entity {
     this.set("priceChangePercent", Value.fromBigDecimal(value));
   }
 
+  get priceUSDChangePercent(): BigDecimal {
+    let value = this.get("priceUSDChangePercent");
+    return value!.toBigDecimal();
+  }
+
+  set priceUSDChangePercent(value: BigDecimal) {
+    this.set("priceUSDChangePercent", Value.fromBigDecimal(value));
+  }
+
   get previous(): string {
     let value = this.get("previous");
     return value!.toString();
@@ -1244,6 +1375,15 @@ export class poolHourly extends Entity {
 
   set price(value: BigDecimal) {
     this.set("price", Value.fromBigDecimal(value));
+  }
+
+  get priceUSD(): BigDecimal {
+    let value = this.get("priceUSD");
+    return value!.toBigDecimal();
+  }
+
+  set priceUSD(value: BigDecimal) {
+    this.set("priceUSD", Value.fromBigDecimal(value));
   }
 
   get open(): BigDecimal {
@@ -1281,6 +1421,42 @@ export class poolHourly extends Entity {
   set close(value: BigDecimal) {
     this.set("close", Value.fromBigDecimal(value));
   }
+
+  get openUSD(): BigDecimal {
+    let value = this.get("openUSD");
+    return value!.toBigDecimal();
+  }
+
+  set openUSD(value: BigDecimal) {
+    this.set("openUSD", Value.fromBigDecimal(value));
+  }
+
+  get highUSD(): BigDecimal {
+    let value = this.get("highUSD");
+    return value!.toBigDecimal();
+  }
+
+  set highUSD(value: BigDecimal) {
+    this.set("highUSD", Value.fromBigDecimal(value));
+  }
+
+  get lowUSD(): BigDecimal {
+    let value = this.get("lowUSD");
+    return value!.toBigDecimal();
+  }
+
+  set lowUSD(value: BigDecimal) {
+    this.set("lowUSD", Value.fromBigDecimal(value));
+  }
+
+  get closeUSD(): BigDecimal {
+    let value = this.get("closeUSD");
+    return value!.toBigDecimal();
+  }
+
+  set closeUSD(value: BigDecimal) {
+    this.set("closeUSD", Value.fromBigDecimal(value));
+  }
 }
 
 export class poolDaily extends Entity {
@@ -1291,19 +1467,26 @@ export class poolDaily extends Entity {
     this.set("startUnix", Value.fromI32(0));
     this.set("token", Value.fromString(""));
     this.set("volumeToken", Value.fromBigInt(BigInt.zero()));
-    this.set("volumeUSD", Value.fromBigInt(BigInt.zero()));
+    this.set("volumeCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("volumeUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("balanceToken", Value.fromBigInt(BigInt.zero()));
-    this.set("balanceCerUsd", Value.fromBigInt(BigInt.zero()));
-    this.set("CreditCerUsd", Value.fromBigInt(BigInt.zero()));
+    this.set("balanceCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("CreditCerby", Value.fromBigInt(BigInt.zero()));
     this.set("amountFeesCollected", Value.fromBigInt(BigInt.zero()));
     this.set("APR", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("priceChangePercent", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("priceUSDChangePercent", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("previous", Value.fromString(""));
     this.set("price", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("priceUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("open", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("high", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("low", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("close", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("openUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("highUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("lowUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("closeUSD", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -1359,13 +1542,22 @@ export class poolDaily extends Entity {
     this.set("volumeToken", Value.fromBigInt(value));
   }
 
-  get volumeUSD(): BigInt {
-    let value = this.get("volumeUSD");
+  get volumeCerby(): BigInt {
+    let value = this.get("volumeCerby");
     return value!.toBigInt();
   }
 
-  set volumeUSD(value: BigInt) {
-    this.set("volumeUSD", Value.fromBigInt(value));
+  set volumeCerby(value: BigInt) {
+    this.set("volumeCerby", Value.fromBigInt(value));
+  }
+
+  get volumeUSD(): BigDecimal {
+    let value = this.get("volumeUSD");
+    return value!.toBigDecimal();
+  }
+
+  set volumeUSD(value: BigDecimal) {
+    this.set("volumeUSD", Value.fromBigDecimal(value));
   }
 
   get balanceToken(): BigInt {
@@ -1377,22 +1569,22 @@ export class poolDaily extends Entity {
     this.set("balanceToken", Value.fromBigInt(value));
   }
 
-  get balanceCerUsd(): BigInt {
-    let value = this.get("balanceCerUsd");
+  get balanceCerby(): BigInt {
+    let value = this.get("balanceCerby");
     return value!.toBigInt();
   }
 
-  set balanceCerUsd(value: BigInt) {
-    this.set("balanceCerUsd", Value.fromBigInt(value));
+  set balanceCerby(value: BigInt) {
+    this.set("balanceCerby", Value.fromBigInt(value));
   }
 
-  get CreditCerUsd(): BigInt {
-    let value = this.get("CreditCerUsd");
+  get CreditCerby(): BigInt {
+    let value = this.get("CreditCerby");
     return value!.toBigInt();
   }
 
-  set CreditCerUsd(value: BigInt) {
-    this.set("CreditCerUsd", Value.fromBigInt(value));
+  set CreditCerby(value: BigInt) {
+    this.set("CreditCerby", Value.fromBigInt(value));
   }
 
   get amountFeesCollected(): BigInt {
@@ -1422,6 +1614,15 @@ export class poolDaily extends Entity {
     this.set("priceChangePercent", Value.fromBigDecimal(value));
   }
 
+  get priceUSDChangePercent(): BigDecimal {
+    let value = this.get("priceUSDChangePercent");
+    return value!.toBigDecimal();
+  }
+
+  set priceUSDChangePercent(value: BigDecimal) {
+    this.set("priceUSDChangePercent", Value.fromBigDecimal(value));
+  }
+
   get previous(): string {
     let value = this.get("previous");
     return value!.toString();
@@ -1438,6 +1639,15 @@ export class poolDaily extends Entity {
 
   set price(value: BigDecimal) {
     this.set("price", Value.fromBigDecimal(value));
+  }
+
+  get priceUSD(): BigDecimal {
+    let value = this.get("priceUSD");
+    return value!.toBigDecimal();
+  }
+
+  set priceUSD(value: BigDecimal) {
+    this.set("priceUSD", Value.fromBigDecimal(value));
   }
 
   get open(): BigDecimal {
@@ -1475,6 +1685,42 @@ export class poolDaily extends Entity {
   set close(value: BigDecimal) {
     this.set("close", Value.fromBigDecimal(value));
   }
+
+  get openUSD(): BigDecimal {
+    let value = this.get("openUSD");
+    return value!.toBigDecimal();
+  }
+
+  set openUSD(value: BigDecimal) {
+    this.set("openUSD", Value.fromBigDecimal(value));
+  }
+
+  get highUSD(): BigDecimal {
+    let value = this.get("highUSD");
+    return value!.toBigDecimal();
+  }
+
+  set highUSD(value: BigDecimal) {
+    this.set("highUSD", Value.fromBigDecimal(value));
+  }
+
+  get lowUSD(): BigDecimal {
+    let value = this.get("lowUSD");
+    return value!.toBigDecimal();
+  }
+
+  set lowUSD(value: BigDecimal) {
+    this.set("lowUSD", Value.fromBigDecimal(value));
+  }
+
+  get closeUSD(): BigDecimal {
+    let value = this.get("closeUSD");
+    return value!.toBigDecimal();
+  }
+
+  set closeUSD(value: BigDecimal) {
+    this.set("closeUSD", Value.fromBigDecimal(value));
+  }
 }
 
 export class poolMonthly extends Entity {
@@ -1485,19 +1731,26 @@ export class poolMonthly extends Entity {
     this.set("startUnix", Value.fromI32(0));
     this.set("token", Value.fromString(""));
     this.set("volumeToken", Value.fromBigInt(BigInt.zero()));
-    this.set("volumeUSD", Value.fromBigInt(BigInt.zero()));
+    this.set("volumeCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("volumeUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("balanceToken", Value.fromBigInt(BigInt.zero()));
-    this.set("balanceCerUsd", Value.fromBigInt(BigInt.zero()));
-    this.set("CreditCerUsd", Value.fromBigInt(BigInt.zero()));
+    this.set("balanceCerby", Value.fromBigInt(BigInt.zero()));
+    this.set("CreditCerby", Value.fromBigInt(BigInt.zero()));
     this.set("amountFeesCollected", Value.fromBigInt(BigInt.zero()));
     this.set("APR", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("priceChangePercent", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("priceUSDChangePercent", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("previous", Value.fromString(""));
     this.set("price", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("priceUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("open", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("high", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("low", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("close", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("openUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("highUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("lowUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("closeUSD", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -1553,13 +1806,22 @@ export class poolMonthly extends Entity {
     this.set("volumeToken", Value.fromBigInt(value));
   }
 
-  get volumeUSD(): BigInt {
-    let value = this.get("volumeUSD");
+  get volumeCerby(): BigInt {
+    let value = this.get("volumeCerby");
     return value!.toBigInt();
   }
 
-  set volumeUSD(value: BigInt) {
-    this.set("volumeUSD", Value.fromBigInt(value));
+  set volumeCerby(value: BigInt) {
+    this.set("volumeCerby", Value.fromBigInt(value));
+  }
+
+  get volumeUSD(): BigDecimal {
+    let value = this.get("volumeUSD");
+    return value!.toBigDecimal();
+  }
+
+  set volumeUSD(value: BigDecimal) {
+    this.set("volumeUSD", Value.fromBigDecimal(value));
   }
 
   get balanceToken(): BigInt {
@@ -1571,22 +1833,22 @@ export class poolMonthly extends Entity {
     this.set("balanceToken", Value.fromBigInt(value));
   }
 
-  get balanceCerUsd(): BigInt {
-    let value = this.get("balanceCerUsd");
+  get balanceCerby(): BigInt {
+    let value = this.get("balanceCerby");
     return value!.toBigInt();
   }
 
-  set balanceCerUsd(value: BigInt) {
-    this.set("balanceCerUsd", Value.fromBigInt(value));
+  set balanceCerby(value: BigInt) {
+    this.set("balanceCerby", Value.fromBigInt(value));
   }
 
-  get CreditCerUsd(): BigInt {
-    let value = this.get("CreditCerUsd");
+  get CreditCerby(): BigInt {
+    let value = this.get("CreditCerby");
     return value!.toBigInt();
   }
 
-  set CreditCerUsd(value: BigInt) {
-    this.set("CreditCerUsd", Value.fromBigInt(value));
+  set CreditCerby(value: BigInt) {
+    this.set("CreditCerby", Value.fromBigInt(value));
   }
 
   get amountFeesCollected(): BigInt {
@@ -1616,6 +1878,15 @@ export class poolMonthly extends Entity {
     this.set("priceChangePercent", Value.fromBigDecimal(value));
   }
 
+  get priceUSDChangePercent(): BigDecimal {
+    let value = this.get("priceUSDChangePercent");
+    return value!.toBigDecimal();
+  }
+
+  set priceUSDChangePercent(value: BigDecimal) {
+    this.set("priceUSDChangePercent", Value.fromBigDecimal(value));
+  }
+
   get previous(): string {
     let value = this.get("previous");
     return value!.toString();
@@ -1632,6 +1903,15 @@ export class poolMonthly extends Entity {
 
   set price(value: BigDecimal) {
     this.set("price", Value.fromBigDecimal(value));
+  }
+
+  get priceUSD(): BigDecimal {
+    let value = this.get("priceUSD");
+    return value!.toBigDecimal();
+  }
+
+  set priceUSD(value: BigDecimal) {
+    this.set("priceUSD", Value.fromBigDecimal(value));
   }
 
   get open(): BigDecimal {
@@ -1668,6 +1948,42 @@ export class poolMonthly extends Entity {
 
   set close(value: BigDecimal) {
     this.set("close", Value.fromBigDecimal(value));
+  }
+
+  get openUSD(): BigDecimal {
+    let value = this.get("openUSD");
+    return value!.toBigDecimal();
+  }
+
+  set openUSD(value: BigDecimal) {
+    this.set("openUSD", Value.fromBigDecimal(value));
+  }
+
+  get highUSD(): BigDecimal {
+    let value = this.get("highUSD");
+    return value!.toBigDecimal();
+  }
+
+  set highUSD(value: BigDecimal) {
+    this.set("highUSD", Value.fromBigDecimal(value));
+  }
+
+  get lowUSD(): BigDecimal {
+    let value = this.get("lowUSD");
+    return value!.toBigDecimal();
+  }
+
+  set lowUSD(value: BigDecimal) {
+    this.set("lowUSD", Value.fromBigDecimal(value));
+  }
+
+  get closeUSD(): BigDecimal {
+    let value = this.get("closeUSD");
+    return value!.toBigDecimal();
+  }
+
+  set closeUSD(value: BigDecimal) {
+    this.set("closeUSD", Value.fromBigDecimal(value));
   }
 }
 
@@ -1723,191 +2039,48 @@ export class Block extends Entity {
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
   }
+}
 
-  get parentHash(): string | null {
-    let value = this.get("parentHash");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
+export class CerbyToken extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("stablePool", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CerbyToken entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save CerbyToken entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("CerbyToken", id.toString(), this);
     }
   }
 
-  set parentHash(value: string | null) {
-    if (!value) {
-      this.unset("parentHash");
-    } else {
-      this.set("parentHash", Value.fromString(<string>value));
-    }
+  static load(id: string): CerbyToken | null {
+    return changetype<CerbyToken | null>(store.get("CerbyToken", id));
   }
 
-  get author(): string | null {
-    let value = this.get("author");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
   }
 
-  set author(value: string | null) {
-    if (!value) {
-      this.unset("author");
-    } else {
-      this.set("author", Value.fromString(<string>value));
-    }
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
-  get difficulty(): BigInt | null {
-    let value = this.get("difficulty");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
+  get stablePool(): string {
+    let value = this.get("stablePool");
+    return value!.toString();
   }
 
-  set difficulty(value: BigInt | null) {
-    if (!value) {
-      this.unset("difficulty");
-    } else {
-      this.set("difficulty", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get totalDifficulty(): BigInt | null {
-    let value = this.get("totalDifficulty");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set totalDifficulty(value: BigInt | null) {
-    if (!value) {
-      this.unset("totalDifficulty");
-    } else {
-      this.set("totalDifficulty", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get gasUsed(): BigInt | null {
-    let value = this.get("gasUsed");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set gasUsed(value: BigInt | null) {
-    if (!value) {
-      this.unset("gasUsed");
-    } else {
-      this.set("gasUsed", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get gasLimit(): BigInt | null {
-    let value = this.get("gasLimit");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set gasLimit(value: BigInt | null) {
-    if (!value) {
-      this.unset("gasLimit");
-    } else {
-      this.set("gasLimit", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get receiptsRoot(): string | null {
-    let value = this.get("receiptsRoot");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set receiptsRoot(value: string | null) {
-    if (!value) {
-      this.unset("receiptsRoot");
-    } else {
-      this.set("receiptsRoot", Value.fromString(<string>value));
-    }
-  }
-
-  get transactionsRoot(): string | null {
-    let value = this.get("transactionsRoot");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set transactionsRoot(value: string | null) {
-    if (!value) {
-      this.unset("transactionsRoot");
-    } else {
-      this.set("transactionsRoot", Value.fromString(<string>value));
-    }
-  }
-
-  get stateRoot(): string | null {
-    let value = this.get("stateRoot");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set stateRoot(value: string | null) {
-    if (!value) {
-      this.unset("stateRoot");
-    } else {
-      this.set("stateRoot", Value.fromString(<string>value));
-    }
-  }
-
-  get size(): BigInt | null {
-    let value = this.get("size");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set size(value: BigInt | null) {
-    if (!value) {
-      this.unset("size");
-    } else {
-      this.set("size", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get unclesHash(): string | null {
-    let value = this.get("unclesHash");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set unclesHash(value: string | null) {
-    if (!value) {
-      this.unset("unclesHash");
-    } else {
-      this.set("unclesHash", Value.fromString(<string>value));
-    }
+  set stablePool(value: string) {
+    this.set("stablePool", Value.fromString(value));
   }
 }

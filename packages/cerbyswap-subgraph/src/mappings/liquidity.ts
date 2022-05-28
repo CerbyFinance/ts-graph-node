@@ -1,6 +1,6 @@
 import { LiquidityAdded as AddedEvent, LiquidityRemoved as RemovedEvent } from '../types/CerbySwap/CerbySwap';
 import { Pool, liqudityEvent } from '../types/schema';
-import { calculatePoolPrice, fetchTokenDecimals, ZERO_BI } from './helpers';
+import { BI_18, calculatePoolPrice, convertTokenToDecimal, fetchTokenDecimals, getCerbyPrice, ZERO_BD, ZERO_BI } from './helpers';
 import { getOrCreateTransaction, CreatePoolTransaction } from './transaction';
 import { createPoolSnapshot } from './snapshots/pool/snapshot';
 import { addTVL, removeTVL } from './snapshots/global/Global';
@@ -12,7 +12,7 @@ export function LiquidityAdded(Event: AddedEvent): void {
         pool = new Pool(Event.params._token.toHexString())
     }
     pool.balanceToken = pool.balanceToken.plus(Event.params._amountTokensIn);
-    pool.balanceCerUsd = pool.balanceCerUsd.plus(Event.params._amountCerUsdToMint);
+    pool.balanceCerby = pool.balanceCerby.plus(Event.params._amountCerbyToMint);
 
     calculatePoolPrice(pool);
     pool.save()
@@ -28,7 +28,14 @@ export function LiquidityAdded(Event: AddedEvent): void {
     liqudity.feedType = 'add';
 
     liqudity.amountTokens = Event.params._amountTokensIn;
-    liqudity.amountCerUsd = Event.params._amountCerUsdToMint;
+    liqudity.amountCerby = Event.params._amountCerbyToMint;
+
+    const price = getCerbyPrice();
+    if(price) {
+        liqudity.amountUSD = convertTokenToDecimal(liqudity.amountCerby, BI_18).div(price);
+    } else {
+        liqudity.amountUSD = ZERO_BD;
+    }
 
     liqudity.amountLpTokensBalanceToBurn = Event.params._lpAmount;
 
@@ -36,7 +43,7 @@ export function LiquidityAdded(Event: AddedEvent): void {
 
     CreatePoolTransaction(pool.id, liqudity.transaction, Event);
 
-    addTVL(Event.params._amountCerUsdToMint, Event.block.timestamp);
+    addTVL(Event.params._amountCerbyToMint, Event.block.timestamp);
 
 
     // createPoolSnapshot({
@@ -56,16 +63,18 @@ export function LiquidityAdded(Event: AddedEvent): void {
     createPoolSnapshot(
         Event.params._token, // Token address
         pool.price, // Price
+        price,
         Event.block.timestamp, // StartUnix
 
         // Liqudity
-        pool.balanceCerUsd,
+        pool.balanceCerby,
         pool.balanceToken,
 
         // Trade
         ZERO_BI,
         ZERO_BI,
-        ZERO_BI
+        ZERO_BI,
+        ZERO_BD
     )
 
     liqudity.save();
@@ -78,7 +87,7 @@ export function LiquidityRemoved(Event: RemovedEvent): void {
         return
     }
     pool.balanceToken = pool.balanceToken.minus(Event.params._amountTokensOut);
-    pool.balanceCerUsd = pool.balanceCerUsd.minus(Event.params._amountCerUsdToBurn);
+    pool.balanceCerby = pool.balanceCerby.minus(Event.params._amountCerbyToBurn);
 
     calculatePoolPrice(pool);
     pool.save()
@@ -90,7 +99,14 @@ export function LiquidityRemoved(Event: RemovedEvent): void {
     liqudity.feedType = 'remove';
 
     liqudity.amountTokens = Event.params._amountTokensOut;
-    liqudity.amountCerUsd = Event.params._amountCerUsdToBurn;
+    liqudity.amountCerby = Event.params._amountCerbyToBurn;
+
+    const price = getCerbyPrice();
+    if(price) {
+        liqudity.amountUSD = convertTokenToDecimal(liqudity.amountCerby, BI_18).div(price);
+    } else {
+        liqudity.amountUSD = ZERO_BD;
+    }
 
     liqudity.amountLpTokensBalanceToBurn = Event.params._amountLpTokensBalanceToBurn;
 
@@ -98,21 +114,23 @@ export function LiquidityRemoved(Event: RemovedEvent): void {
 
     liqudity.logIndex = Event.logIndex;
 
-    removeTVL(Event.params._amountCerUsdToBurn, Event.block.timestamp);
+    removeTVL(Event.params._amountCerbyToBurn, Event.block.timestamp);
 
     createPoolSnapshot(
         Event.params._token, // Token address
         pool.price, // Price
+        price,
         Event.block.timestamp, // StartUnix
 
         // Liqudity
-        pool.balanceCerUsd,
+        pool.balanceCerby,
         pool.balanceToken,
 
         // Trade
         ZERO_BI,
         ZERO_BI,
-        ZERO_BI
+        ZERO_BI,
+        ZERO_BD
     )
 
     liqudity.save();

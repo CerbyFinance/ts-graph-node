@@ -8,8 +8,8 @@ export function handleSync(Event: SyncEvent): void {
         pool = new Pool(Event.params._token.toHexString())
     }
     pool.balanceToken = Event.params._newBalanceToken;
-    pool.balanceCerUsd = Event.params._newBalanceCerUsd;
-    pool.CreditCerUsd = Event.params._newCreditCerUsd
+    pool.balanceCerby = Event.params._newBalanceCerby;
+    pool.CreditCerby = Event.params._newCreditCerby
     calculatePoolPrice(pool);
 
     // createSnapshot(

@@ -57,7 +57,7 @@ export class LiquidityAdded__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get _amountCerUsdToMint(): BigInt {
+  get _amountCerbyToMint(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
@@ -87,7 +87,7 @@ export class LiquidityRemoved__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get _amountCerUsdToBurn(): BigInt {
+  get _amountCerbyToBurn(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
@@ -169,7 +169,7 @@ export class Swap__Params {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get _amountCerUsdIn(): BigInt {
+  get _amountCerbyIn(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 
@@ -177,7 +177,7 @@ export class Swap__Params {
     return this._event.parameters[4].value.toBigInt();
   }
 
-  get _amountCerUsdOut(): BigInt {
+  get _amountCerbyOut(): BigInt {
     return this._event.parameters[5].value.toBigInt();
   }
 
@@ -211,11 +211,11 @@ export class Sync__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get _newBalanceCerUsd(): BigInt {
+  get _newBalanceCerby(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get _newCreditCerUsd(): BigInt {
+  get _newCreditCerby(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 }
@@ -288,61 +288,75 @@ export class TransferSingle__Params {
   }
 }
 
+export class CerbySwap__getPoolBalancesByTokenResultValue0Struct extends ethereum.Tuple {
+  get balanceToken(): BigInt {
+    return this[0].toBigInt();
+  }
+
+  get balanceCerby(): BigInt {
+    return this[1].toBigInt();
+  }
+}
+
 export class CerbySwap__getPoolsBalancesByTokensResultValue0Struct extends ethereum.Tuple {
   get balanceToken(): BigInt {
     return this[0].toBigInt();
   }
 
-  get balanceCerUsd(): BigInt {
+  get balanceCerby(): BigInt {
     return this[1].toBigInt();
   }
 }
 
 export class CerbySwap__getPoolsByTokensResultValue0Struct extends ethereum.Tuple {
-  get tradeVolumePerPeriodInCerUsd(): Array<BigInt> {
-    return this[0].toBigIntArray();
+  get sellVolumeThisPeriodInCerby(): BigInt {
+    return this[0].toBigInt();
   }
 
-  get lastCachedOneMinusFee(): i32 {
+  get lastCachedFee(): i32 {
     return this[1].toI32();
   }
 
-  get lastCachedTradePeriod(): i32 {
-    return this[2].toI32();
+  get nextUpdateWillBeAt(): BigInt {
+    return this[2].toBigInt();
   }
 
   get lastSqrtKValue(): BigInt {
     return this[3].toBigInt();
   }
 
-  get creditCerUsd(): BigInt {
+  get creditCerby(): BigInt {
     return this[4].toBigInt();
   }
 }
 
 export class CerbySwap__getSettingsResultValue0Struct extends ethereum.Tuple {
+  get onePeriodInSeconds(): BigInt {
+    return this[0].toBigInt();
+  }
+
   get mintFeeBeneficiary(): Address {
-    return this[0].toAddress();
+    return this[1].toAddress();
   }
 
   get mintFeeMultiplier(): BigInt {
-    return this[1].toBigInt();
+    return this[2].toBigInt();
   }
 
   get feeMinimum(): i32 {
-    return this[2].toI32();
-  }
-
-  get feeMaximum(): i32 {
     return this[3].toI32();
   }
 
+  get feeMaximum(): i32 {
+    return this[4].toI32();
+  }
+
   get tvlMultiplierMinimum(): BigInt {
-    return this[4].toBigInt();
+    return this[5].toBigInt();
   }
 
   get tvlMultiplierMaximum(): BigInt {
-    return this[5].toBigInt();
+    return this[6].toBigInt();
   }
 }
 
@@ -449,56 +463,6 @@ export class CerbySwap extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  generateVaultAddressByToken(_token: Address): Address {
-    let result = super.call(
-      "generateVaultAddressByToken",
-      "generateVaultAddressByToken(address):(address)",
-      [ethereum.Value.fromAddress(_token)]
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_generateVaultAddressByToken(
-    _token: Address
-  ): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "generateVaultAddressByToken",
-      "generateVaultAddressByToken(address):(address)",
-      [ethereum.Value.fromAddress(_token)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getCurrentOneMinusFeeBasedOnTrades(_token: Address): BigInt {
-    let result = super.call(
-      "getCurrentOneMinusFeeBasedOnTrades",
-      "getCurrentOneMinusFeeBasedOnTrades(address):(uint256)",
-      [ethereum.Value.fromAddress(_token)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getCurrentOneMinusFeeBasedOnTrades(
-    _token: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getCurrentOneMinusFeeBasedOnTrades",
-      "getCurrentOneMinusFeeBasedOnTrades(address):(uint256)",
-      [ethereum.Value.fromAddress(_token)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   getInputTokensForExactTokens(
     _tokenIn: Address,
     _tokenOut: Address,
@@ -577,6 +541,39 @@ export class CerbySwap extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  getPoolBalancesByToken(
+    _token: Address
+  ): CerbySwap__getPoolBalancesByTokenResultValue0Struct {
+    let result = super.call(
+      "getPoolBalancesByToken",
+      "getPoolBalancesByToken(address):((uint256,uint256))",
+      [ethereum.Value.fromAddress(_token)]
+    );
+
+    return changetype<CerbySwap__getPoolBalancesByTokenResultValue0Struct>(
+      result[0].toTuple()
+    );
+  }
+
+  try_getPoolBalancesByToken(
+    _token: Address
+  ): ethereum.CallResult<CerbySwap__getPoolBalancesByTokenResultValue0Struct> {
+    let result = super.tryCall(
+      "getPoolBalancesByToken",
+      "getPoolBalancesByToken(address):((uint256,uint256))",
+      [ethereum.Value.fromAddress(_token)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      changetype<CerbySwap__getPoolBalancesByTokenResultValue0Struct>(
+        value[0].toTuple()
+      )
+    );
+  }
+
   getPoolsBalancesByTokens(
     _tokens: Array<Address>
   ): Array<CerbySwap__getPoolsBalancesByTokensResultValue0Struct> {
@@ -617,7 +614,7 @@ export class CerbySwap extends ethereum.SmartContract {
   ): Array<CerbySwap__getPoolsByTokensResultValue0Struct> {
     let result = super.call(
       "getPoolsByTokens",
-      "getPoolsByTokens(address[]):((uint40[6],uint16,uint8,uint120,uint120)[])",
+      "getPoolsByTokens(address[]):((uint128,uint8,uint32,uint128,uint128)[])",
       [ethereum.Value.fromAddressArray(_tokens)]
     );
 
@@ -631,7 +628,7 @@ export class CerbySwap extends ethereum.SmartContract {
   ): ethereum.CallResult<Array<CerbySwap__getPoolsByTokensResultValue0Struct>> {
     let result = super.tryCall(
       "getPoolsByTokens",
-      "getPoolsByTokens(address[]):((uint40[6],uint16,uint8,uint120,uint120)[])",
+      "getPoolsByTokens(address[]):((uint128,uint8,uint32,uint128,uint128)[])",
       [ethereum.Value.fromAddressArray(_tokens)]
     );
     if (result.reverted) {
@@ -646,7 +643,7 @@ export class CerbySwap extends ethereum.SmartContract {
   getSettings(): CerbySwap__getSettingsResultValue0Struct {
     let result = super.call(
       "getSettings",
-      "getSettings():((address,uint32,uint16,uint16,uint64,uint64))",
+      "getSettings():((uint32,address,uint32,uint8,uint8,uint64,uint64))",
       []
     );
 
@@ -660,7 +657,7 @@ export class CerbySwap extends ethereum.SmartContract {
   > {
     let result = super.tryCall(
       "getSettings",
-      "getSettings():((address,uint32,uint16,uint16,uint64,uint64))",
+      "getSettings():((uint32,address,uint32,uint8,uint8,uint64,uint64))",
       []
     );
     if (result.reverted) {
@@ -838,6 +835,36 @@ export class CerbySwap extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
+  token0(): Address {
+    let result = super.call("token0", "token0():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_token0(): ethereum.CallResult<Address> {
+    let result = super.tryCall("token0", "token0():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  token1(): Address {
+    let result = super.call("token1", "token1():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_token1(): ethereum.CallResult<Address> {
+    let result = super.tryCall("token1", "token1():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   totalSupply(): BigInt {
     let result = super.call("totalSupply", "totalSupply():(uint256)", []);
 
@@ -966,20 +993,20 @@ export class AddTokenLiquidityCall__Outputs {
   }
 }
 
-export class AdminChangeCerUsdCreditInPoolCall extends ethereum.Call {
-  get inputs(): AdminChangeCerUsdCreditInPoolCall__Inputs {
-    return new AdminChangeCerUsdCreditInPoolCall__Inputs(this);
+export class AdminChangeCerbyCreditInPoolCall extends ethereum.Call {
+  get inputs(): AdminChangeCerbyCreditInPoolCall__Inputs {
+    return new AdminChangeCerbyCreditInPoolCall__Inputs(this);
   }
 
-  get outputs(): AdminChangeCerUsdCreditInPoolCall__Outputs {
-    return new AdminChangeCerUsdCreditInPoolCall__Outputs(this);
+  get outputs(): AdminChangeCerbyCreditInPoolCall__Outputs {
+    return new AdminChangeCerbyCreditInPoolCall__Outputs(this);
   }
 }
 
-export class AdminChangeCerUsdCreditInPoolCall__Inputs {
-  _call: AdminChangeCerUsdCreditInPoolCall;
+export class AdminChangeCerbyCreditInPoolCall__Inputs {
+  _call: AdminChangeCerbyCreditInPoolCall;
 
-  constructor(call: AdminChangeCerUsdCreditInPoolCall) {
+  constructor(call: AdminChangeCerbyCreditInPoolCall) {
     this._call = call;
   }
 
@@ -987,15 +1014,15 @@ export class AdminChangeCerUsdCreditInPoolCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _amountCerUsdCredit(): BigInt {
+  get _amountCerbyCredit(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 }
 
-export class AdminChangeCerUsdCreditInPoolCall__Outputs {
-  _call: AdminChangeCerUsdCreditInPoolCall;
+export class AdminChangeCerbyCreditInPoolCall__Outputs {
+  _call: AdminChangeCerbyCreditInPoolCall;
 
-  constructor(call: AdminChangeCerUsdCreditInPoolCall) {
+  constructor(call: AdminChangeCerbyCreditInPoolCall) {
     this._call = call;
   }
 }
@@ -1025,7 +1052,7 @@ export class AdminCreatePoolCall__Inputs {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get _amountCerUsdToMint(): BigInt {
+  get _amountCerbyToMint(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
 
@@ -1139,28 +1166,32 @@ export class AdminUpdateSettingsCall__Outputs {
 }
 
 export class AdminUpdateSettingsCall_settingsStruct extends ethereum.Tuple {
+  get onePeriodInSeconds(): BigInt {
+    return this[0].toBigInt();
+  }
+
   get mintFeeBeneficiary(): Address {
-    return this[0].toAddress();
+    return this[1].toAddress();
   }
 
   get mintFeeMultiplier(): BigInt {
-    return this[1].toBigInt();
+    return this[2].toBigInt();
   }
 
   get feeMinimum(): i32 {
-    return this[2].toI32();
-  }
-
-  get feeMaximum(): i32 {
     return this[3].toI32();
   }
 
+  get feeMaximum(): i32 {
+    return this[4].toI32();
+  }
+
   get tvlMultiplierMinimum(): BigInt {
-    return this[4].toBigInt();
+    return this[5].toBigInt();
   }
 
   get tvlMultiplierMaximum(): BigInt {
-    return this[5].toBigInt();
+    return this[6].toBigInt();
   }
 }
 
@@ -1189,7 +1220,7 @@ export class CreatePoolCall__Inputs {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get _amountCerUsdToMint(): BigInt {
+  get _amountCerbyToMint(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
 
@@ -1206,20 +1237,20 @@ export class CreatePoolCall__Outputs {
   }
 }
 
-export class IncreaseCerUsdCreditInPoolCall extends ethereum.Call {
-  get inputs(): IncreaseCerUsdCreditInPoolCall__Inputs {
-    return new IncreaseCerUsdCreditInPoolCall__Inputs(this);
+export class IncreaseCerbyCreditInPoolCall extends ethereum.Call {
+  get inputs(): IncreaseCerbyCreditInPoolCall__Inputs {
+    return new IncreaseCerbyCreditInPoolCall__Inputs(this);
   }
 
-  get outputs(): IncreaseCerUsdCreditInPoolCall__Outputs {
-    return new IncreaseCerUsdCreditInPoolCall__Outputs(this);
+  get outputs(): IncreaseCerbyCreditInPoolCall__Outputs {
+    return new IncreaseCerbyCreditInPoolCall__Outputs(this);
   }
 }
 
-export class IncreaseCerUsdCreditInPoolCall__Inputs {
-  _call: IncreaseCerUsdCreditInPoolCall;
+export class IncreaseCerbyCreditInPoolCall__Inputs {
+  _call: IncreaseCerbyCreditInPoolCall;
 
-  constructor(call: IncreaseCerUsdCreditInPoolCall) {
+  constructor(call: IncreaseCerbyCreditInPoolCall) {
     this._call = call;
   }
 
@@ -1227,15 +1258,15 @@ export class IncreaseCerUsdCreditInPoolCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _amountCerUsdCredit(): BigInt {
+  get _amountCerbyCredit(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 }
 
-export class IncreaseCerUsdCreditInPoolCall__Outputs {
-  _call: IncreaseCerUsdCreditInPoolCall;
+export class IncreaseCerbyCreditInPoolCall__Outputs {
+  _call: IncreaseCerbyCreditInPoolCall;
 
-  constructor(call: IncreaseCerUsdCreditInPoolCall) {
+  constructor(call: IncreaseCerbyCreditInPoolCall) {
     this._call = call;
   }
 }

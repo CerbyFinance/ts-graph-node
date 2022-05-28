@@ -1,6 +1,6 @@
 import { Swap as SwapEvent } from '../types/CerbySwap/CerbySwap';
 import { Pool, Swap, Transaction } from '../types/schema';
-import { calculatePoolPrice, ZERO_BI } from './helpers';
+import { BI_18, calculatePoolPrice, convertTokenToDecimal, exponentToBigDecimal, getCerbyPrice, getStablePool, ZERO_BD, ZERO_BI } from './helpers';
 import { createPoolSnapshot } from './snapshots/pool/snapshot';
 import { CreatePoolTransaction, getOrCreateTransaction } from './transaction';
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
@@ -13,7 +13,7 @@ export function handleSwap(Event: SwapEvent): void {
     }
 
     pool.balanceToken = pool.balanceToken.plus(Event.params._amountTokensIn).minus(Event.params._amountTokensOut);
-    pool.balanceCerUsd = pool.balanceCerUsd.plus(Event.params._amountCerUsdIn).minus(Event.params._amountCerUsdOut);
+    pool.balanceCerby = pool.balanceCerby.plus(Event.params._amountCerbyIn).minus(Event.params._amountCerbyOut);
     calculatePoolPrice(pool);
     pool.save();
 
@@ -23,17 +23,34 @@ export function handleSwap(Event: SwapEvent): void {
     "-" +
     Event.logIndex.toHexString());
 
-    if(Event.params._amountCerUsdOut.equals(ZERO_BI)) {
-        swap.feedType =  'buy';
+    const stablePool = getStablePool();
 
-        swap.amountTokensIn  = Event.params._amountCerUsdIn;
+    if(Event.params._amountCerbyOut.equals(ZERO_BI)) {
+        swap.feedType = 'buy';
+
+        swap.amountTokensIn  = Event.params._amountCerbyIn;
         swap.amountTokensOut = Event.params._amountTokensOut;
-        addTVL(Event.params._amountCerUsdIn, Event.block.timestamp);
+        addTVL(Event.params._amountCerbyIn, Event.block.timestamp);
     } else {
-        swap.feedType =  'sell';
+        swap.feedType = 'sell';
         swap.amountTokensIn  = Event.params._amountTokensIn;
-        swap.amountTokensOut = Event.params._amountCerUsdOut;
-        removeTVL(Event.params._amountCerUsdOut, Event.block.timestamp)
+        swap.amountTokensOut = Event.params._amountCerbyOut;
+        removeTVL(Event.params._amountCerbyOut, Event.block.timestamp)
+    }
+
+    let priceUSDPerCerby: BigDecimal | null;
+    if(stablePool) {
+        priceUSDPerCerby = stablePool.price;
+        const amountCerby = convertTokenToDecimal(Event.params._amountCerbyIn.plus(Event.params._amountCerbyOut), BI_18);
+        if(stablePool.id == pool.id) {
+            swap.amountUSD = amountCerby;
+            swap.priceUSD = BigDecimal.fromString('1');
+        } else {
+            swap.amountUSD = amountCerby.div(stablePool.price);
+            swap.priceUSD = pool.priceUSD;
+        }
+    } else {
+        priceUSDPerCerby = null;
     }
 
     const FEE_DENORM = BigInt.fromI32(10000);
@@ -44,6 +61,7 @@ export function handleSwap(Event: SwapEvent): void {
 
     swap.amountFeesCollected = (swap.amountTokensIn.times(Event.params._currentFee)).div(FEE_DENORM)
 
+    // swap.priceUSD = pool.price;
     swap.price = pool.price;
 
     swap.transaction = getOrCreateTransaction(Event);
@@ -73,6 +91,7 @@ export function handleSwap(Event: SwapEvent): void {
     createPoolSnapshot(
         Event.params._token, // Token address
         pool.price, // Price
+        priceUSDPerCerby, // PriceUSD
         Event.block.timestamp, // StartUnix
 
         // Liqudity
@@ -80,8 +99,9 @@ export function handleSwap(Event: SwapEvent): void {
         ZERO_BI,
 
         // Trade
-        Event.params._amountCerUsdIn.plus(Event.params._amountCerUsdOut),
+        Event.params._amountCerbyIn.plus(Event.params._amountCerbyOut),
         Event.params._amountTokensIn.plus(Event.params._amountTokensOut),
-        swap.amountFeesCollected
+        swap.amountFeesCollected,
+        swap.amountUSD
     )
 }

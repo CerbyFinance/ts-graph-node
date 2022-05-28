@@ -14,11 +14,13 @@ export function dailyGlobalSnapshot(GlobalObj: Global, blockTimestamp: BigInt): 
       globalDayData = new GlobalDaily(globalDayID)
       globalDayData.startUnix = dayStartTimestamp;
       globalDayData.totalTransactions = ZERO_BI;
-      globalDayData.totalVolumeUSD = ZERO_BI;
+      globalDayData.totalVolumeCerby = ZERO_BI;
+      globalDayData.totalVolumeUSD = ZERO_BD;
       globalDayData.Fees = ZERO_BD;
 
       if(GlobalObj) {
         globalDayData.totalPools = GlobalObj.totalPools;
+        globalDayData.totalLiquidityCerby = GlobalObj.totalLiquidityCerby;
         globalDayData.totalLiquidityUSD = GlobalObj.totalLiquidityUSD;
         if(!GlobalObj.latestDailies) {
             globalDayData.previous = GlobalObj.latestDailies;
